@@ -5,868 +5,888 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mozaico AI Agents 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #0f0f10;
-    --surface: #1a1a1d;
-    --surface2: #222226;
-    --border: #2e2e34;
-    --border2: #3a3a42;
-    --text: #f0f0f2;
-    --text2: #9898a8;
-    --text3: #5e5e70;
-    --accent-blue: #4a9eff;
-    --accent-blue-bg: #162438;
-    --accent-amber: #e8a020;
-    --accent-amber-bg: #271d0a;
-    --accent-green: #3cba7a;
-    --accent-green-bg: #0d2318;
-    --accent-red: #e05252;
-    --accent-red-bg: #2a1010;
-    --accent-purple: #9b7fe8;
-    --accent-purple-bg: #1e1530;
-    --accent-teal: #38bfb0;
-    --accent-teal-bg: #0d2220;
-    --accent-google: #34a853;
-    --accent-google-bg: #0d2318;
-    --accent-google2: #4285f4;
-    --accent-google2-bg: #0e1e32;
-    --accent-google3: #fbbc04;
-    --accent-google3-bg: #2a2008;
-    --accent-mind: #e040fb;
-    --accent-mind-bg: #28102e;
-    --accent-mind2: #ff6b6b;
-    --accent-mind2-bg: #2a1010;
-    --accent-mind3: #ffa726;
-    --accent-mind3-bg: #2a1a08;
-    --accent-zap: #ff4a00;
-    --accent-zap-bg: #2a1000;
-    --accent-zap2: #ff8c69;
-    --accent-zap2-bg: #2a1808;
-    --accent-zap3: #ffb347;
-    --accent-zap3-bg: #2a1e08;
-  }
-
-  body {
-    font-family: 'Inter', -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 48px 32px;
-    min-height: 100vh;
-  }
-
-  .page-header { max-width: 1200px; margin: 0 auto 32px; }
-  .page-header h1 { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 6px; letter-spacing: -0.5px; }
-  .page-header p { font-size: 14px; color: var(--text2); }
-  .stats-row { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-  .stat-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 13px; color: var(--text2); }
-  .stat-chip strong { color: var(--text); font-weight: 600; margin-right: 4px; }
-
-  /* ── PLATFORM TOGGLE ── */
-  .toggle-bar { max-width: 1200px; margin: 0 auto 36px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
-  .toggle-label { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
-  .toggle-btns { display: flex; gap: 8px; }
-  .toggle-btn {
-    flex: 1; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border2);
-    background: var(--surface2); color: var(--text2); cursor: pointer; font-size: 12px;
-    font-weight: 500; font-family: inherit; transition: all 0.18s;
-    display: flex; align-items: center; gap: 10px; text-align: left;
-  }
-  .toggle-btn:hover { background: #2a2a30; }
-  .toggle-btn.active-claude  { background: var(--accent-blue-bg);  border-color: var(--accent-blue);  color: var(--text); }
-  .toggle-btn.active-google  { background: #0d201a;                border-color: var(--accent-google); color: var(--text); }
-  .toggle-btn.active-mind    { background: var(--accent-mind-bg);  border-color: var(--accent-mind);  color: var(--text); }
-  .toggle-btn.active-zap     { background: var(--accent-zap-bg);   border-color: var(--accent-zap);   color: var(--text); }
-  .btn-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .btn-body { flex: 1; }
-  .btn-title { font-size: 12px; font-weight: 600; color: var(--text); }
-  .btn-subtitle { font-size: 10px; color: var(--text2); margin-top: 2px; line-height: 1.4; }
-  .active-claude .btn-subtitle { color: var(--accent-blue); opacity: 0.8; }
-  .active-google .btn-subtitle { color: var(--accent-google); opacity: 0.8; }
-  .active-mind   .btn-subtitle { color: var(--accent-mind);  opacity: 0.8; }
-  .active-zap    .btn-subtitle { color: var(--accent-zap);   opacity: 0.8; }
-
-  .platform-note { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.6; color: var(--text2); border: 1px solid var(--border); background: var(--surface2); display: none; }
-  .platform-note.visible { display: block; }
-  .platform-note strong { color: var(--text); }
-  .note-row { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
-  .note-col { flex: 1; min-width: 160px; }
-  .note-col-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-  .note-col-body { font-size: 11px; color: var(--text2); line-height: 1.6; }
-  .note-col-body span { display: block; padding: 1px 0; }
-
-  /* ── CAPABILITY BADGE on MindStudio cards ── */
-  .cap-tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 6px; margin-top: 4px; margin-right: 3px; }
-  .cap-yes  { background: var(--accent-green-bg); color: var(--accent-green); }
-  .cap-no   { background: var(--accent-red-bg);   color: var(--accent-red);   }
-  .cap-part { background: var(--accent-amber-bg); color: var(--accent-amber); }
-
-  /* ── DEPT BLOCKS ── */
-  .dept-block { max-width: 1200px; margin: 0 auto 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
-  .dept-header { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; transition: background 0.15s; }
-  .dept-header:hover { background: var(--surface2); }
-  .dept-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .dept-title { font-size: 16px; font-weight: 600; color: var(--text); flex: 1; }
-  .dept-count { font-size: 12px; color: var(--text2); background: var(--surface2); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; }
-  .chevron { color: var(--text3); font-size: 11px; transition: transform 0.2s; }
-  .chevron.open { transform: rotate(180deg); }
-
-  .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-  .agent-card { padding: 18px 20px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); transition: background 0.15s; }
-  .agent-card:hover { background: var(--surface2); }
-  .agent-card:nth-child(3n) { border-right: none; }
-  .agent-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-  .agent-name.muted { color: var(--text2); }
-  .agent-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
-
-  .badge-row { display: none; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
-  .badge-row.visible { display: flex; }
-  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; }
-  .b-blue    { background: var(--accent-blue-bg);    color: var(--accent-blue);    }
-  .b-amber   { background: var(--accent-amber-bg);   color: var(--accent-amber);   }
-  .b-green   { background: var(--accent-green-bg);   color: var(--accent-green);   }
-  .b-red     { background: var(--accent-red-bg);     color: var(--accent-red);     }
-  .b-purple  { background: var(--accent-purple-bg);  color: var(--accent-purple);  }
-  .b-google  { background: var(--accent-google-bg);  color: var(--accent-google);  }
-  .b-google2 { background: var(--accent-google2-bg); color: var(--accent-google2); }
-  .b-google3 { background: var(--accent-google3-bg); color: var(--accent-google3); }
-  .b-mind    { background: var(--accent-mind-bg);    color: var(--accent-mind);    }
-  .b-mind2   { background: var(--accent-mind2-bg);   color: var(--accent-mind2);   }
-  .b-mind3   { background: var(--accent-mind3-bg);   color: var(--accent-mind3);   }
-  .b-zap     { background: var(--accent-zap-bg);   color: var(--accent-zap);   }
-  .b-zap2    { background: var(--accent-zap2-bg);  color: var(--accent-zap2);  }
-  .b-zap3    { background: var(--accent-zap3-bg);  color: var(--accent-zap3);  }
-  .b-gray    { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
-
-  .human-gate { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; background: #2a2008; color: var(--accent-amber); margin-top: 6px; }
-  .scope-tag  { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; background: var(--accent-blue-bg); color: var(--accent-blue); margin-top: 6px; }
-  .tbd-tag    { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 6px; background: var(--surface2); color: var(--text3); border: 1px solid var(--border2); margin-top: 6px; }
-
-  @media (max-width: 768px) {
-    .agents-grid { grid-template-columns: 1fr; }
-    .agent-card { border-right: none; }
-    body { padding: 24px 16px; }
-    .toggle-btns { flex-direction: column; }
-  }
-  @media (max-width: 1024px) and (min-width: 769px) {
-    .agents-grid { grid-template-columns: repeat(2, 1fr); }
-    .agent-card:nth-child(3n) { border-right: 1px solid var(--border); }
-    .agent-card:nth-child(2n) { border-right: none; }
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0f0f10; --surface:#1a1a1d; --surface2:#222226;
+  --border:#2e2e34; --border2:#3a3a42;
+  --text:#f0f0f2; --text2:#9898a8; --text3:#5e5e70;
+  --ab:#4a9eff; --ab-bg:#162438;
+  --aa:#e8a020; --aa-bg:#271d0a;
+  --ag:#3cba7a; --ag-bg:#0d2318;
+  --ar:#e05252; --ar-bg:#2a1010;
+  --ap:#9b7fe8; --ap-bg:#1e1530;
+  --go:#34a853; --go-bg:#0d2318;
+  --go2:#4285f4; --go2-bg:#0e1e32;
+  --go3:#fbbc04; --go3-bg:#2a2008;
+  --mi:#e040fb; --mi-bg:#28102e;
+  --mi2:#ff6b6b; --mi2-bg:#2a1010;
+  --mi3:#ffa726; --mi3-bg:#2a1a08;
+  --za:#ff4a00; --za-bg:#2a1000;
+  --za2:#ff8c69; --za2-bg:#2a1808;
+  --za3:#ffb347; --za3-bg:#2a1e08;
+  --new-c:#3cba7a; --new-bg:#0d2318;
+}
+body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color:var(--text); padding:48px 32px; }
+.page-header { max-width:1200px; margin:0 auto 32px; }
+.page-header h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; margin-bottom:6px; }
+.page-header p { font-size:14px; color:var(--text2); }
+.stats { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+.stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 14px; font-size:13px; color:var(--text2); }
+.stat-chip strong { color:var(--text); font-weight:600; margin-right:4px; }
+.toggle-bar { max-width:1200px; margin:0 auto 36px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 20px; }
+.toggle-label { font-size:11px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px; }
+.toggle-btns { display:flex; gap:8px; }
+.toggle-btn { flex:1; padding:12px 14px; border-radius:10px; border:1px solid var(--border2); background:var(--surface2); color:var(--text2); cursor:pointer; font-size:12px; font-weight:500; font-family:inherit; transition:all 0.18s; display:flex; align-items:center; gap:10px; }
+.toggle-btn:hover { background:#2a2a30; }
+.toggle-btn.ac { background:var(--ab-bg); border-color:var(--ab); color:var(--text); }
+.toggle-btn.ag { background:#0d201a; border-color:var(--go); color:var(--text); }
+.toggle-btn.am { background:var(--mi-bg); border-color:var(--mi); color:var(--text); }
+.toggle-btn.az { background:var(--za-bg); border-color:var(--za); color:var(--text); }
+.btn-icon { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.btn-title { font-size:12px; font-weight:600; color:var(--text); }
+.btn-sub { font-size:10px; color:var(--text2); margin-top:2px; }
+.ac .btn-sub { color:var(--ab); opacity:.8; }
+.ag .btn-sub { color:var(--go); opacity:.8; }
+.am .btn-sub { color:var(--mi); opacity:.8; }
+.az .btn-sub { color:var(--za); opacity:.8; }
+.pnote { margin-top:14px; padding:10px 14px; border-radius:8px; font-size:12px; line-height:1.6; color:var(--text2); border:1px solid var(--border); background:var(--surface2); display:none; }
+.pnote.vis { display:block; }
+.pnote strong { color:var(--text); }
+.dept-block { max-width:1200px; margin:0 auto 32px; background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.dept-hdr { display:flex; align-items:center; gap:14px; padding:16px 20px; border-bottom:1px solid var(--border); cursor:pointer; user-select:none; transition:background .15s; }
+.dept-hdr:hover { background:var(--surface2); }
+.dept-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.dept-title { font-size:16px; font-weight:600; flex:1; }
+.dept-count { font-size:12px; color:var(--text2); background:var(--surface2); border:1px solid var(--border); padding:3px 10px; border-radius:20px; }
+.chev { color:var(--text3); font-size:11px; transition:transform .2s; }
+.chev.open { transform:rotate(180deg); }
+.agents-grid { display:grid; grid-template-columns:repeat(3,1fr); }
+.agent { padding:16px 18px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); transition:background .15s; }
+.agent:hover { background:var(--surface2); }
+.agent:nth-child(3n) { border-right:none; }
+.aname { font-size:14px; font-weight:600; margin-bottom:5px; }
+.aname.muted { color:var(--text2); }
+.adesc { font-size:11px; color:var(--text2); line-height:1.5; margin-bottom:8px; }
+.br { display:none; flex-wrap:wrap; gap:4px; margin-top:6px; }
+.br.vis { display:flex; }
+.b { display:inline-flex; align-items:center; font-size:10px; font-weight:500; padding:2px 7px; border-radius:5px; }
+.bc { background:var(--ab-bg); color:var(--ab); }
+.ba { background:var(--aa-bg); color:var(--aa); }
+.bg { background:var(--ag-bg); color:var(--ag); }
+.br2 { background:var(--ar-bg); color:var(--ar); }
+.bp { background:var(--ap-bg); color:var(--ap); }
+.bgo { background:var(--go-bg); color:var(--go); }
+.bgo2 { background:var(--go2-bg); color:var(--go2); }
+.bgo3 { background:var(--go3-bg); color:var(--go3); }
+.bm { background:var(--mi-bg); color:var(--mi); }
+.bm2 { background:var(--mi2-bg); color:var(--mi2); }
+.bm3 { background:var(--mi3-bg); color:var(--mi3); }
+.bz { background:var(--za-bg); color:var(--za); }
+.bz2 { background:var(--za2-bg); color:var(--za2); }
+.bz3 { background:var(--za3-bg); color:var(--za3); }
+.bnew { background:var(--new-bg); color:var(--new-c); }
+.bgray { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); }
+.stag { display:inline-flex; font-size:10px; font-weight:500; padding:3px 8px; border-radius:6px; margin-top:5px; }
+.stag-blue { background:var(--ab-bg); color:var(--ab); }
+.stag-amber { background:var(--aa-bg); color:var(--aa); }
+.stag-warn { background:#2a2008; color:var(--aa); }
+.htag { display:inline-flex; font-size:10px; font-weight:500; padding:3px 8px; border-radius:6px; background:#2a2008; color:var(--aa); margin-top:5px; }
+.tbd { display:inline-flex; font-size:10px; font-weight:500; padding:3px 8px; border-radius:6px; background:var(--surface2); color:var(--text3); border:1px solid var(--border2); margin-top:5px; }
+.cost-wrap { max-width:1200px; margin:0 auto 48px; border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.cost-hdr { padding:14px 20px; background:var(--surface2); border-bottom:1px solid var(--border); }
+.cost-hdr-title { font-size:16px; font-weight:600; }
+.cost-hdr-sub { font-size:12px; color:var(--text2); margin-top:2px; }
+.cost-block { display:none; }
+.cost-block.vis { display:block; }
+.cost-grid { display:grid; grid-template-columns:repeat(3,1fr); }
+.cost-cell { padding:16px 18px; border-right:1px solid var(--border); border-bottom:1px solid var(--border); }
+.cost-cell:nth-child(3n) { border-right:none; }
+.cost-label { font-size:10px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+.cost-amount { font-size:20px; font-weight:600; margin-bottom:6px; }
+.cost-amount span { font-size:12px; font-weight:400; color:var(--text2); }
+.cost-desc { font-size:11px; color:var(--text2); line-height:1.6; margin-bottom:8px; }
+.cost-note { padding:12px 18px; font-size:12px; color:var(--text2); line-height:1.7; background:var(--surface2); border-top:1px solid var(--border); }
+.comp-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:16px; background:var(--surface2); }
+.comp-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+.comp-title { font-size:12px; font-weight:600; margin-bottom:4px; }
+.comp-amt { font-size:18px; font-weight:700; margin-bottom:2px; }
+.comp-note { font-size:10px; color:var(--text2); }
+.disclaimer { padding:12px 20px; font-size:11px; color:var(--text3); border-top:1px solid var(--border); }
+@media(max-width:768px){ .agents-grid{grid-template-columns:1fr;} .agent{border-right:none;} body{padding:24px 16px;} .toggle-btns{flex-direction:column;} .comp-grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:1024px) and (min-width:769px){ .agents-grid{grid-template-columns:repeat(2,1fr);} .agent:nth-child(3n){border-right:1px solid var(--border);} .agent:nth-child(2n){border-right:none;} }
 </style>
+
 </head>
 <body>
 
 <div class="page-header">
   <h1>Mozaico AI Agents 2026</h1>
-  <p>mozaico.com · Complete agent map across all business functions</p>
-  <div class="stats-row">
-    <div class="stat-chip"><strong>29</strong> Total agents</div>
-    <div class="stat-chip"><strong>7</strong> Departments</div>
+  <div class="stats">
+    <div class="stat-chip"><strong>45</strong> Total agents</div>
+    <div class="stat-chip"><strong>11</strong> Departments</div>
     <div class="stat-chip"><strong>4</strong> Build platforms</div>
   </div>
 </div>
 
-<!-- ── PLATFORM TOGGLE ── -->
+
+<div style="max-width:1200px;margin:0 auto 32px;">
+  <div style="border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);">
+    <div style="padding:28px 28px 20px;border-bottom:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">What is this document</div>
+      <div style="font-size:15px;color:var(--text2);line-height:1.8;max-width:900px;">A complete AI agent strategy for <strong style="color:var(--text)">mozaico.com</strong> — 45 purpose-built agents across 11 departments that automate marketing, operations, customer service, content creation, and financial reporting. Each agent is mapped to a specific business function with the tools, platform options, and estimated costs needed to build and run it.</div>
+    </div>
+    <div style="padding:20px 28px;border-bottom:1px solid var(--border);">
+      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;">45 agents across 11 departments — click any to jump</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;">
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-creative')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🎨</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Creative &amp; Content</div><div style="font-size:11px;color:var(--text3);margin-top:2px">7 agents · Art Director, Blog, Mosaic Sketch</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-paid-ads')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">💰</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Paid Ads</div><div style="font-size:11px;color:var(--text3);margin-top:2px">6 agents · Google, Meta, TikTok, Pinterest, X, LinkedIn</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-influencer')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🤝</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Influencer, Affiliate &amp; PR</div><div style="font-size:11px;color:var(--text3);margin-top:2px">4 agents · Awin, UpPromote, Clay, Instantly</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-email')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">📣</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Email Marketing</div><div style="font-size:11px;color:var(--text3);margin-top:2px">1 agent · Omnisend</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-seo')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">📊</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">SEO &amp; Analytics</div><div style="font-size:11px;color:var(--text3);margin-top:2px">5 agents · GA4, SEMrush, Looker Studio</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-community')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">💬</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Community Management</div><div style="font-size:11px;color:var(--text3);margin-top:2px">2 agents · Sprout Social, Stamped, Google</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-social')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">📱</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Social Media Marketing</div><div style="font-size:11px;color:var(--text3);margin-top:2px">7 agents · Meta, TikTok, Pinterest, X, LinkedIn, YouTube, Reddit</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-website')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🖥️</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Website &amp; Technology</div><div style="font-size:11px;color:var(--text3);margin-top:2px">3 agents · Hotjar, Screaming Frog, Playwright</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-customer')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🎙️</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Customer Service</div><div style="font-size:11px;color:var(--text3);margin-top:2px">3 agents · JustCall, Reamaze, Stripe</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-operations')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🚚</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Operations &amp; Fulfillment</div><div style="font-size:11px;color:var(--text3);margin-top:2px">5 agents · DHL, Shopify, Google Drive</div></div>
+        </div>
+        <div style="background:var(--surface2);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color 0.15s;" onclick="jumpTo('dept-accounting')" onmouseover="this.style.borderColor='var(--ab)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span style="font-size:18px">🧾</span>
+          <div><div style="font-size:12px;font-weight:500;color:var(--text)">Accounting &amp; Finance</div><div style="font-size:11px;color:var(--text3);margin-top:2px">2 agents · QuickBooks, Stripe, DHL</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:20px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Build platforms</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8;">☁️ Google Agent Platform<br>🤖 Claude API + N8n<br>🧠 MindStudio<br>⚡ Zapier Agents</div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Monthly cost range</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8;">Google: <strong style="color:var(--text)">$40–120/mo</strong><br>Claude + N8n: <strong style="color:var(--text)">$90–140/mo</strong><br>MindStudio: <strong style="color:var(--text)">$50–120/mo</strong><br>Zapier: <strong style="color:var(--text)">$69–110/mo</strong></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">Key integrations</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8;">Shopify · DHL Express<br>Omnisend · Reamaze<br>QuickBooks · Stripe<br>GA4 · SEMrush · Stamped</div>
+      </div>
+
+    </div>
+    <div style="padding:14px 28px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-right:4px;">Customer lifecycle</span>
+      <span style="font-size:11px;color:var(--text3)">Discovery</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Consideration</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Cart</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Purchase</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Production</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Delivery</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)">Review</span><span style="font-size:11px;color:var(--text3)">→</span><span style="font-size:11px;color:var(--text3)"><strong style=&quot;color:var(--text2)&quot;>Reactivation</strong></span>
+    </div>
+  </div>
+</div>
+
 <div class="toggle-bar">
   <div class="toggle-label">Select build platform</div>
   <div class="toggle-btns">
-    <button class="toggle-btn active-claude" onclick="setPlatform('claude')">
-      <div class="btn-icon" style="background:#162438">🤖</div>
-      <div class="btn-body">
-        <div class="btn-title">Claude API + N8n</div>
-        <div class="btn-subtitle">Anthropic Claude · N8n workflows · Zapier</div>
-      </div>
-    </button>
-    <button class="toggle-btn" onclick="setPlatform('google')">
-      <div class="btn-icon" style="background:#0d2318">☁️</div>
-      <div class="btn-body">
-        <div class="btn-title">Google Agent Platform</div>
-        <div class="btn-subtitle">Vertex AI · Gemini · Cloud Functions · Dialogflow CX · BigQuery</div>
-      </div>
-    </button>
-    <button class="toggle-btn" onclick="setPlatform('mind')">
-      <div class="btn-icon" style="background:#28102e">🧠</div>
-      <div class="btn-body">
-        <div class="btn-title">MindStudio</div>
-        <div class="btn-subtitle">No-code visual builder · 200+ models · 1000+ integrations · Claude 4, GPT-5, Gemini</div>
-      </div>
-    </button>
-    <button class="toggle-btn" onclick="setPlatform('zap')">
-      <div class="btn-icon" style="background:#2a1000">⚡</div>
-      <div class="btn-body">
-        <div class="btn-title">Zapier Agents</div>
-        <div class="btn-subtitle">9,000+ app integrations · AI Agents · Copilot · MCP · Human-in-the-loop</div>
-      </div>
-    </button>
+    <button class="toggle-btn ag" onclick="setPlatform('google')"><div class="btn-icon" style="background:#0d2318">☁️</div><div><div class="btn-title">Google Agent Platform</div><div class="btn-sub">Vertex AI · Gemini · Cloud Functions · Dialogflow CX · BigQuery</div></div></button>
+    <button class="toggle-btn" onclick="setPlatform('claude')"><div class="btn-icon" style="background:#162438">🤖</div><div><div class="btn-title">Claude API + N8n</div><div class="btn-sub">Anthropic Claude · N8n workflows · Zapier</div></div></button>
+    <button class="toggle-btn" onclick="setPlatform('mind')"><div class="btn-icon" style="background:#28102e">🧠</div><div><div class="btn-title">MindStudio</div><div class="btn-sub">No-code visual builder · 200+ models · 1000+ integrations</div></div></button>
+    <button class="toggle-btn" onclick="setPlatform('zap')"><div class="btn-icon" style="background:#2a1000">⚡</div><div><div class="btn-title">Zapier Agents</div><div class="btn-sub">9,000+ app integrations · AI Agents · Copilot · MCP</div></div></button>
   </div>
-
-  <div class="platform-note visible" id="note-claude">
-    <strong>Claude API + N8n:</strong> Claude handles all text intelligence. N8n orchestrates automations and API connections. Best for flexibility, cost control, and complex multi-step workflows. Self-hostable.
-  </div>
-  <div class="platform-note" id="note-google">
-    <strong>Google Agent Platform:</strong> Vertex AI Agent Builder for agent logic, Gemini as the LLM, Dialogflow CX for conversational agents, Cloud Functions + Scheduler for triggers, BigQuery + Looker Studio for analytics. Best if you're already in the Google ecosystem. Tighter native integration with Google Ads API, GA4, Drive, and Gmail.
-  </div>
-  <div class="platform-note" id="note-zap">
-    <strong>Zapier Agents — your existing Zapier account already covers this.</strong> Zapier has evolved into a full AI orchestration platform with 9,000+ app integrations, AI Agents (autonomous task execution), Copilot (natural language workflow builder), MCP connectivity, and human-in-the-loop approvals. Since you already have Zapier, this is the fastest path to get operations agents running with zero new subscriptions.
-    <div class="note-row">
-      <div class="note-col">
-        <div class="note-col-title" style="color:var(--accent-zap)">⚡ Best suited for</div>
-        <div class="note-col-body">
-          <span>All operations agents (orders, shipments, invoices, stock)</span>
-          <span>Shipment Status Monitor — DHL + Gmail trigger</span>
-          <span>Customer Image Update Agent — Drive + Reamaze</span>
-          <span>DHL Invoice Checker — DHL API + QuickBooks</span>
-          <span>KPI Tracker — GA4 + Sheets + alert emails</span>
-          <span>Review Engagement — Stamped + Google Business</span>
-        </div>
-      </div>
-      <div class="note-col">
-        <div class="note-col-title" style="color:var(--accent-amber)">⚠ Pair with Claude API for</div>
-        <div class="note-col-body">
-          <span>Content agents needing deep writing quality</span>
-          <span>Blog Writer, Product Content, Email copy</span>
-          <span>Mosaic Sketch Generator (image generation)</span>
-          <span>Monthly P&L narrative analysis</span>
-          <span>Complex reasoning tasks → use Claude as Zapier AI action</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="platform-note" id="note-mind">
-    <strong>MindStudio — no-code visual drag-and-drop builder.</strong> Access 200+ AI models (Claude 4, GPT-5, Gemini, Imagen 4, Veo 3) without managing separate API keys. 1,000+ integrations built in. Build and test agents in 15–60 minutes. Human-in-the-loop checkpoints supported. Best for non-technical team members who need to build and modify agents themselves without a developer.
-    <div class="note-row">
-      <div class="note-col">
-        <div class="note-col-title" style="color:var(--accent-green)">✓ Best suited for</div>
-        <div class="note-col-body">
-          <span>All content & copy agents (Blog, Product, Email)</span>
-          <span>Social media & community agents</span>
-          <span>Review engagement & influencer outreach</span>
-          <span>Mosaic Sketch Generator (image input + approval)</span>
-          <span>Art Director (multi-model image/video gen)</span>
-          <span>KPI & analytics report agents</span>
-        </div>
-      </div>
-      <div class="note-col">
-        <div class="note-col-title" style="color:var(--accent-amber)">⚠ Use with external triggers for</div>
-        <div class="note-col-body">
-          <span>Operations agents (order entry, shipments)</span>
-          <span>DHL tracking & invoice checks</span>
-          <span>Stock sync agents</span>
-          <span>Website monitor (needs Playwright externally)</span>
-          <span>Complex multi-API workflows → pair with Zapier</span>
-        </div>
-      </div>
-    </div>
-  </div>
+  
+  <div class="pnote" id="note-claude"><strong>Claude API + N8n:</strong> Claude handles all text intelligence. N8n orchestrates automations and API connections. Best for flexibility, cost control, and complex multi-step workflows. Self-hostable.</div>
+  <div class="pnote vis" id="note-google"><strong>Google Agent Platform:</strong> Vertex AI Agent Builder for agent logic, Gemini as the LLM, Dialogflow CX for conversational agents, Cloud Functions + Scheduler for triggers, BigQuery + Looker Studio for analytics. Best if already in the Google ecosystem. New accounts get $300 free credits for 90 days.</div>
+  <div class="pnote" id="note-mind"><strong>MindStudio — no-code visual drag-and-drop builder.</strong> Access 200+ AI models (Claude 4, GPT-5, Gemini) without managing separate API keys. 1,000+ integrations built in. Build agents in 15–60 minutes. Human-in-the-loop checkpoints supported.</div>
+  <div class="pnote" id="note-zap"><strong>Zapier Agents — you already have Zapier.</strong> 9,000+ app integrations, AI Agents, Copilot natural language builder, MCP connectivity, and human-in-the-loop approvals. Since you already have Zapier, the main new cost is just the Claude API.</div>
 </div>
 
-<!-- ═══ CREATIVE & CONTENT ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
+
+<div class="dept-block" id="dept-creative">
+  <div class="dept-hdr" onclick="tog(this)">
     <div class="dept-icon" style="background:#1a2e1a">🎨</div>
-    <span class="dept-title">Creative & Content</span>
+    <span class="dept-title">Creative &amp; Content</span>
+    <span class="dept-count">7 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">Mosaic Sketch Generator</div><div class="adesc">Customer photo → AI generates mosaic-style sketch → queued for team approval → approved sketch sent to customer via Reamaze before production starts</div>
+<div class="br platform-claude"><span class="b bc">Claude + Gemini</span><span class="b ba">N8n + Reamaze</span></div>
+<div class="br platform-google"><span class="b bgo">Vertex AI Agent</span><span class="b bgo2">Gemini Vision</span><span class="b bgo3">Cloud Functions</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Visual Builder</span><span class="b bm2">Gemini Vision / GPT-4o</span><span class="b bm3">Human checkpoint ✓</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Human approval step ✓</span></div>
+<div class="htag">👤 Human approval before sending</div>
+</div>
+<div class="agent"><div class="aname">Art Director</div><div class="adesc">One agent, two output types, one brand voice. Images → Imagen 4 / Flux / Midjourney. Videos (Reels, TikTok, YouTube Shorts, time-lapses) → Veo 3 / Sora / Kling. Resizing &amp; optimization → Topaz / Adobe Firefly</div>
+<div class="br platform-claude"><span class="b br2">Latest stack</span><span class="b bc">Multi-model</span></div>
+<div class="br platform-google"><span class="b bgo">Imagen 4 on Vertex</span><span class="b bgo2">Veo 3 on Vertex</span><span class="b bgo3">Gemini orchestrator</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio AI Media Workbench</span><span class="b bm2">200+ image/video models</span><span class="b bm3">No API keys needed</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Imagen 4 / Gemini via AI action</span><span class="b bz3">Canva API integration</span></div>
+</div>
+<div class="agent"><div class="aname">Content Calendar &amp; Strategy Agent</div><div class="adesc">Plans weekly content topics, maintains master content calendar, and briefs all platform agents (Meta, TikTok, Pinterest, YouTube, X, LinkedIn) on what to create and when. Each platform agent writes its own captions — this agent owns the strategy and schedule</div>
+<div class="br platform-claude"><span class="b bc">Claude</span><span class="b ba">N8n + Notion + Metricool</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Cloud Scheduler</span><span class="b bgo3">Notion + Metricool API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Notion + Metricool via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Notion + Metricool via Zapier</span></div>
+</div>
+<div class="agent"><div class="aname">Blog Writer</div><div class="adesc">Weekly SEO-optimized blog posts, trend research, collaborates with SEO agent. After publishing, auto-creates Outbrain native ad campaign — headline variations, thumbnail, budget, and audience targeting</div>
+<div class="br platform-claude"><span class="b bc">Claude</span><span class="b ba">N8n + Outbrain API</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">Vertex AI Agent</span><span class="b bgo3">Outbrain API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Outbrain via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Outbrain via webhook</span></div>
+</div>
+<div class="agent"><div class="aname">Product Content Specialist</div><div class="adesc">Titles, descriptions, alt texts, image tags for all mosaic products on Shopify</div>
+<div class="br platform-claude"><span class="b bc">Claude</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">Vertex AI Agent</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Shopify via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Shopify direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">Website Content Manager</div><div class="adesc">On-site SEO, aligns content with product positioning and search intent</div>
+<div class="br platform-claude"><span class="b bc">Claude</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">Search Console API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">GSC via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">GSC + Shopify</span></div>
+</div>
+<div class="agent"><div class="aname">Installed Photos Agent</div><div class="adesc">Collects approved customer installation photos, publishes them to the Shopify "Get Inspired" gallery, and syncs to FourSixty for shoppable Instagram feed. Triggers after customer submits photo — matches to order, tags product, pushes to both destinations automatically</div>
+<div class="br platform-claude"><span class="b bc">Claude + Shopify</span><span class="b ba">N8n + FourSixty</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">Shopify API</span><span class="b bgo3">FourSixty API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Shopify via Zapier</span><span class="b bm3">FourSixty integration</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Shopify direct ✓</span><span class="b bz3">FourSixty via webhook</span></div>
+<div class="stag stag-blue">🖼️ Installed photos · Shopify gallery · FourSixty</div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-paid-ads">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#0e1a2e">💰</div>
+    <span class="dept-title">Paid Ads</span>
     <span class="dept-count">6 agents</span>
-    <span class="chevron open">▼</span>
+    <span class="chev open">▼</span>
   </div>
   <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">Mosaic Sketch Generator</div>
-      <div class="agent-desc">Customer photo → AI generates mosaic-style sketch → queued for team approval → approved sketch sent to customer via Reamaze before production starts</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Gemini</span><span class="badge b-amber">N8n + Reamaze</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Vertex AI Agent</span><span class="badge b-google2">Gemini Vision</span><span class="badge b-google3">Cloud Functions</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Human approval step ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Visual Builder</span><span class="badge b-mind2">Gemini Vision / GPT-4o</span><span class="badge b-mind3">Human checkpoint ✓</span></div>
-      <div class="human-gate">👤 Human approval before sending</div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Art Director</div>
-      <div class="agent-desc">Best model per task — Imagen 4 / Flux / Midjourney for images, Veo 3 / Sora / Kling for video, Topaz for upscaling, Adobe Firefly for editing. Outputs resized for all ad formats</div>
-      <div class="badge-row platform-claude"><span class="badge b-red">Latest stack</span><span class="badge b-blue">Multi-model</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Imagen 4 on Vertex</span><span class="badge b-google2">Veo 3 on Vertex</span><span class="badge b-google3">Gemini orchestrator</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Imagen 4 / Gemini via AI action</span><span class="badge b-zap3">Canva API integration</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio AI Media Workbench</span><span class="badge b-mind2">200+ image/video models</span><span class="badge b-mind3">No API keys needed</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Social Media Creator</div>
-      <div class="agent-desc">Schedules posts, writes captions, selects hashtags, manages content calendar across all platforms</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Metricool</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Cloud Scheduler</span><span class="badge b-google3">Metricool API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Metricool direct integration</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4 / GPT-5</span><span class="badge b-mind3">Metricool via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Blog Writer</div>
-      <div class="agent-desc">Weekly SEO-optimized blog posts, trend research, collaborates with SEO agent</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">Vertex AI Agent</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Google Trends + SEMrush</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Web search built-in</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Product Content Specialist</div>
-      <div class="agent-desc">Titles, descriptions, alt texts, image tags for all mosaic products on Shopify</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">Vertex AI Agent</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Shopify direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Shopify via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Website Content Manager</div>
-      <div class="agent-desc">On-site SEO, aligns content with product positioning and search intent</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">Search Console API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">GSC + Shopify</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">GSC via Zapier</span></div>
-    </div>
+<div class="agent"><div class="aname">Google Ads Agent</div><div class="adesc">Search, Shopping, Display, YouTube pre-roll &amp; in-feed video ads. Daily bid optimization, negative keyword cleanup, Quality Score monitoring, budget pacing. YouTube Ads managed within Google Ads interface</div>
+<div class="br platform-claude"><span class="b ba">N8n + Google Ads API</span></div>
+<div class="br platform-google"><span class="b bgo">Vertex AI Agent</span><span class="b bgo2">Google Ads API</span><span class="b bgo3">BigQuery</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4 / Gemini</span><span class="b bm3">Google Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Google Ads direct ✓</span><span class="b bz3">GA4 + Sheets</span></div>
+</div>
+<div class="agent"><div class="aname">Meta Ads Agent</div><div class="adesc">Manages all paid campaigns across Facebook and Instagram — Feed ads, Stories ads, Reels ads, Carousel ads. Budget allocation, audience decisions, lookalike audiences, retargeting, A/B creative testing, and performance reporting via Meta Ads Manager</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + Meta Ads API</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">Meta Ads API</span><span class="b bgo3">Vertex AI</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Meta Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">Meta Ads direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-blue">📘 Facebook + Instagram paid · retargeting · lookalikes</div>
+</div>
+<div class="agent"><div class="aname">TikTok Ads Agent</div><div class="adesc">Manages TikTok paid campaigns — In-Feed Ads, TopView, Spark Ads (boosting top organic posts), and Shopping Ads. Audience targeting, bid optimization, creative testing, and performance reporting via TikTok Ads Manager</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + TikTok Ads API</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">TikTok Ads API</span><span class="b bgo3">Vertex AI</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">TikTok Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">TikTok Ads direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-amber">🎵 TikTok paid · Spark Ads · Shopping Ads · In-Feed</div>
+</div>
+<div class="agent"><div class="aname">Pinterest Ads Agent</div><div class="adesc">Manages Pinterest paid campaigns — Promoted Pins, Shopping Ads, Collections Ads, and video ads. Product feed management, audience targeting, bid optimization, and performance reporting. Coordinates with Pinterest Agent on top-performing organic pins to amplify</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + Pinterest Ads API</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">Pinterest Ads API</span><span class="b bgo3">Vertex AI</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Pinterest Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">Pinterest Ads API</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-amber">📌 Pinterest paid · Shopping Ads · Promoted Pins</div>
+</div>
+<div class="agent"><div class="aname">X Ads Agent</div><div class="adesc">Manages X paid campaigns — Promoted Posts, Follower Ads, and Trend Takeovers. Audience targeting, bid optimization, creative testing and performance reporting via X Ads Manager</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + X Ads API</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">X Ads API</span><span class="b bgo3">Vertex AI</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">X Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">X Ads direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-amber">🐦 X paid · Promoted Posts · Follower Ads</div>
+</div>
+<div class="agent"><div class="aname">LinkedIn Ads Agent</div><div class="adesc">Manages LinkedIn paid campaigns — Sponsored Content, Lead Gen Forms, Message Ads, and audience retargeting. Targets interior designers, architects, hospitality buyers by job title and company</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + LinkedIn Ads API</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">LinkedIn Ads API</span><span class="b bgo3">Vertex AI</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">LinkedIn Ads via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">LinkedIn Ads direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-amber">🏢 LinkedIn paid · Lead Gen Forms · Sponsored Content</div>
+</div>
 
   </div>
 </div>
 
-<!-- ═══ MARKETING & PAID ADS ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
-    <div class="dept-icon" style="background:#0e1e2e">📣</div>
-    <span class="dept-title">Marketing & Paid Ads</span>
-    <span class="dept-count">5 agents</span>
-    <span class="chevron open">▼</span>
-  </div>
-  <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">Google Ads Agent</div>
-      <div class="agent-desc">Search, Shopping, Display & YouTube exclusively. Daily bid optimization, negative keyword cleanup, Quality Score monitoring, budget pacing</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Google Ads API</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Vertex AI Agent</span><span class="badge b-google2">Google Ads API</span><span class="badge b-google3">BigQuery</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Google Ads direct integration ✓</span><span class="badge b-zap3">GA4 + Sheets</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4 / Gemini</span><span class="badge b-mind3">Google Ads via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Social Ads Agent</div>
-      <div class="agent-desc">Strategy + execution across Meta, Pinterest, TikTok, LinkedIn. Budget allocation, audience decisions, campaign management, A/B creative testing, cross-platform reporting</div>
-      <div class="badge-row platform-claude"><span class="badge b-red">Merged</span><span class="badge b-amber">N8n + Meta/TikTok APIs</span></div>
-      <div class="badge-row platform-google"><span class="badge b-red">Merged</span><span class="badge b-google">Vertex AI Agent</span><span class="badge b-google2">Meta API · TikTok API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-red">Merged</span><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Meta Ads direct ✓</span><span class="badge b-zap3">TikTok + LinkedIn APIs</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-red">Merged</span><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Meta/TikTok via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Email & SMS Specialist</div>
-      <div class="agent-desc">Omnisend campaigns, flows, segmentation, and automation sequences</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Omnisend</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Cloud Functions</span><span class="badge b-google3">Omnisend API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Omnisend direct integration ✓</span><span class="badge b-zap3">Claude via Zapier AI</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Omnisend via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Affiliate Manager</div>
-      <div class="agent-desc">Manages Awin, approves affiliates, creates media kits, monitors partner performance</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Awin</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Awin API</span><span class="badge b-google3">Looker Studio</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Awin via webhook</span><span class="badge b-zap3">Gmail direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Awin via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">PR & Partnerships Manager</div>
-      <div class="agent-desc">Press releases, media kits, backlink outreach with Olga, PR events and collaborations</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">Gmail API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Gmail direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Gmail via Zapier</span></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══ SEO & ANALYTICS ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
-    <div class="dept-icon" style="background:#2a2008">📊</div>
-    <span class="dept-title">SEO & Analytics</span>
-    <span class="dept-count">5 agents</span>
-    <span class="chevron open">▼</span>
-  </div>
-  <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">KPI Tracker Agent</div>
-      <div class="agent-desc">Daily cross-channel monitoring — Google Ads ROAS, social CPA, Omnisend CTR, affiliate conversions, fulfillment & ops KPIs. Fires alert when any metric drops below threshold</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + GA4 + Sheets</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Vertex AI Agent</span><span class="badge b-google2">GA4 API</span><span class="badge b-google3">BigQuery + Looker</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">GA4 + Google Ads direct ✓</span><span class="badge b-zap3">Sheets + email alerts ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Scheduled daily run</span><span class="badge b-mind3">GA4 + Sheets via Zapier</span></div>
-      <div class="scope-tag">📡 Marketing channels scope</div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Web Analyst</div>
-      <div class="agent-desc">Website & Shopify behaviour — sessions, bounce rate, checkout funnel drop-offs, top/worst pages, on-site search, device & geo breakdown. Weekly reports</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + GA4</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini + GA4</span><span class="badge b-google2">BigQuery</span><span class="badge b-google3">Looker Studio</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">GA4 direct integration ✓</span><span class="badge b-zap3">Shopify direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4 / Gemini</span><span class="badge b-mind3">GA4 via Zapier</span></div>
-      <div class="scope-tag">🌐 Site & Shopify scope</div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Monthly Marketing Report Agent</div>
-      <div class="agent-desc">Runs on 1st of each month. Pulls all channel data, writes narrative analysis, exports formatted PDF with charts and emails to team</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + GA4 + Looker</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">BigQuery</span><span class="badge b-google3">Looker Studio PDF</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Scheduled Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Gmail send direct ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Scheduled monthly</span><span class="badge b-mind3">PDF export built-in ✓</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">SEO Specialist</div>
-      <div class="agent-desc">Keyword research, metadata, H1s, schema, backlink analysis, SEMrush disavows</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + SEMrush</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Search Console API</span><span class="badge b-google3">SEMrush API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">GSC + SEMrush via webhook</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Web scraping built-in ✓</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Market Research Analyst</div>
-      <div class="agent-desc">Trend analysis, competitor research, pricing intelligence across mosaic and tile markets</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + web search</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini + Grounding</span><span class="badge b-google2">Google Search API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Web search action built-in ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Google Search built-in ✓</span><span class="badge b-mind3">Web scraping built-in ✓</span></div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ═══ SOCIAL & COMMUNITY ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
-    <div class="dept-icon" style="background:#2a0e1e">💬</div>
-    <span class="dept-title">Social & Community</span>
+<div class="dept-block" id="dept-influencer">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#1a0e2e">🤝</div>
+    <span class="dept-title">Influencer, Affiliate &amp; PR</span>
     <span class="dept-count">4 agents</span>
-    <span class="chevron open">▼</span>
+    <span class="chev open">▼</span>
   </div>
   <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">Community Manager</div>
-      <div class="agent-desc">Instagram DMs & comments, Facebook messages & comments, TikTok & Pinterest comments, Twitter/X mentions. Social platforms only — no support inbox crossover</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Sprout</span><span class="badge b-red">Scope clarified</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Dialogflow CX</span><span class="badge b-google2">Gemini</span><span class="badge b-google3">Sprout Social API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Sprout Social integration</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Sprout via Zapier</span></div>
-      <div class="scope-tag">💬 Social DMs & comments only</div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Influencer Outreach</div>
-      <div class="agent-desc">Discovers & vets influencers via Modash/Heepsy, $2–3K budget per deal, manages contracts and ensures brand-aligned collaborations</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Modash</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Modash API</span><span class="badge b-google3">Gmail API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Claude via Zapier AI</span><span class="badge b-zap3">Gmail direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Web scraping + Gmail</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Review Engagement Agent</div>
-      <div class="agent-desc">Monitors and responds to Google Business and Stamped.io reviews. Escalates negatives, requests follow-up on low scores</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Stamped</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini</span><span class="badge b-google2">Google Business API</span><span class="badge b-google3">Stamped API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Stamped direct integration ✓</span><span class="badge b-zap3">Google Business via webhook</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Stamped + Google via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Organic Social Optimizer</div>
-      <div class="agent-desc">Pinterest, Reddit, LinkedIn organic growth, Metricool/Buffer scheduling and performance tracking</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Buffer</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Scheduler</span><span class="badge b-google2">Gemini</span><span class="badge b-google3">Buffer API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Buffer direct integration ✓</span><span class="badge b-zap3">Metricool integration</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Buffer via Zapier</span></div>
-    </div>
+<div class="agent"><div class="aname">Influencer Outreach</div><div class="adesc">Searches Instagram, TikTok and YouTube for relevant profiles in interior design, home decor and mosaic niches. Sends DMs directly — if no reply within 3–5 days, follows up with a personalised email. Manages the full outreach pipeline, tracks responses, and escalates warm leads to the team. $2–3K budget per deal</div>
+<div class="br platform-claude"><span class="b bc">Claude + Instagram API</span><span class="b ba">N8n + Gmail</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Instagram Graph API</span><span class="b bgo3">Gmail API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Instagram + Gmail via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Instagram direct ✓</span><span class="b bz3">Gmail direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">Affiliate Manager</div><div class="adesc">Manages Awin and UpPromote, approves affiliates, creates media kits, monitors partner performance across both platforms</div>
+<div class="br platform-claude"><span class="b bc">Claude + Awin + UpPromote</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Awin API</span><span class="b bgo3">UpPromote + Shopify</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Awin + UpPromote via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Awin via webhook</span><span class="b bz3">UpPromote via Shopify</span></div>
+</div>
+<div class="agent"><div class="aname">PR &amp; Partnerships Manager</div><div class="adesc">Press releases, media kits, backlink outreach with Olga, PR events and collaborations</div>
+<div class="br platform-claude"><span class="b bc">Claude</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">Gmail API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Gmail via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Gmail direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">B2B Outreach Agent</div><div class="adesc">Finds and enriches leads on Clay (interior designers, architects, hospitality buyers, real estate developers), writes personalised outreach emails via Claude, launches automated sequences on Instantly, tracks replies and escalates warm leads</div>
+<div class="br platform-claude"><span class="b bc">Claude + Clay + Instantly</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Clay API</span><span class="b bgo3">Instantly API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Clay + Instantly via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Clay via webhook</span><span class="b bz3">Instantly direct ✓</span></div>
+<div class="stag stag-amber">🎯 Cold outreach · lead enrichment · sequences</div>
+</div>
 
   </div>
 </div>
 
-<!-- ═══ CUSTOMER SERVICE ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
+<div class="dept-block" id="dept-email">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#0e1e32">📣</div>
+    <span class="dept-title">Email Marketing</span>
+    <span class="dept-count">1 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">Email &amp; SMS Specialist</div><div class="adesc">Omnisend campaigns, flows, segmentation, and automation sequences</div>
+<div class="br platform-claude"><span class="b bc">Claude + Omnisend</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Cloud Functions</span><span class="b bgo3">Omnisend API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Omnisend via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Omnisend direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-seo">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#2a2008">📊</div>
+    <span class="dept-title">SEO &amp; Analytics</span>
+    <span class="dept-count">5 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">KPI Tracker Agent</div><div class="adesc">Daily cross-channel monitoring — Google Ads ROAS, social CPA, Omnisend CTR, affiliate conversions, fulfillment &amp; ops KPIs. Fires alert when any metric drops below threshold</div>
+<div class="br platform-claude"><span class="b bc">Claude + GA4 + Sheets</span></div>
+<div class="br platform-google"><span class="b bgo">Vertex AI Agent</span><span class="b bgo2">GA4 API</span><span class="b bgo3">BigQuery + Looker</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Scheduled daily run</span><span class="b bm3">GA4 + Sheets via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">GA4 + Google Ads direct ✓</span><span class="b bz3">Sheets + email alerts ✓</span></div>
+<div class="stag stag-blue">📡 Marketing channels scope</div>
+</div>
+<div class="agent"><div class="aname">Web Analyst</div><div class="adesc">Website &amp; Shopify behaviour — sessions, bounce rate, checkout funnel drop-offs, top/worst pages, on-site search, device &amp; geo breakdown. Weekly reports</div>
+<div class="br platform-claude"><span class="b bc">Claude + GA4</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini + GA4</span><span class="b bgo2">BigQuery</span><span class="b bgo3">Looker Studio</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4 / Gemini</span><span class="b bm3">GA4 via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">GA4 direct ✓</span><span class="b bz3">Shopify direct ✓</span></div>
+<div class="stag stag-blue">🌐 Site &amp; Shopify scope</div>
+</div>
+<div class="agent"><div class="aname">Monthly Marketing Report Agent</div><div class="adesc">Runs on 1st of each month. Pulls all channel data, writes narrative analysis, exports formatted PDF with charts and emails to team</div>
+<div class="br platform-claude"><span class="b bc">Claude + GA4 + Looker</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">BigQuery</span><span class="b bgo3">Looker Studio PDF</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Scheduled monthly</span><span class="b bm3">PDF export built-in ✓</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Scheduled Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Gmail send direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">SEO Specialist</div><div class="adesc">Keyword research, metadata, H1s, schema, backlink analysis, SEMrush disavows</div>
+<div class="br platform-claude"><span class="b bc">Claude + SEMrush</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Search Console API</span><span class="b bgo3">SEMrush API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Web scraping built-in ✓</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">GSC + SEMrush via webhook</span></div>
+</div>
+<div class="agent"><div class="aname">Market Research Analyst</div><div class="adesc">Trend analysis, competitor research, pricing intelligence across mosaic and tile markets</div>
+<div class="br platform-claude"><span class="b bc">Claude + web search</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini + Grounding</span><span class="b bgo2">Google Search API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Google Search built-in ✓</span><span class="b bm3">Web scraping built-in ✓</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Web search built-in ✓</span></div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-community">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#0e1e2e">💬</div>
+    <span class="dept-title">Community Management</span>
+    <span class="dept-count">2 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">Community Manager</div><div class="adesc">Monitors and responds to DMs and comments across all platforms — Instagram, Facebook, TikTok, Pinterest, X, LinkedIn. Social platforms only</div>
+<div class="br platform-claude"><span class="b bc">Claude + Sprout</span><span class="b br2">Scope clarified</span></div>
+<div class="br platform-google"><span class="b bgo">Dialogflow CX</span><span class="b bgo2">Gemini</span><span class="b bgo3">Sprout Social API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Sprout via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Claude via Zapier AI</span><span class="b bz3">Sprout Social integration</span></div>
+<div class="stag stag-blue">💬 Social DMs &amp; comments only</div>
+</div>
+<div class="agent"><div class="aname">Review Engagement Agent</div><div class="adesc">Monitors and responds to Google Business and Stamped.io reviews. Escalates negatives, requests follow-up on low scores</div>
+<div class="br platform-claude"><span class="b bc">Claude + Stamped</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Google Business API</span><span class="b bgo3">Stamped API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Stamped + Google via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Stamped direct ✓</span><span class="b bz3">Google Business via webhook</span></div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-social">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#2a0e1e">📱</div>
+    <span class="dept-title">Social Media Marketing</span>
+    <span class="dept-count">7 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">Meta Agent</div><div class="adesc">Manages organic content across Facebook and Instagram — feed posts, Stories, Reels, carousels. Writes captions tailored for Meta audiences, schedules via Meta Business Suite. Coordinates with Meta Ads Agent for paid amplification</div>
+<div class="br platform-claude"><span class="b bc">Claude + Meta Graph API</span><span class="b ba">N8n + Metricool</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Meta Graph API</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Meta via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Facebook direct ✓</span><span class="b bz3">Instagram direct ✓</span></div>
+<div class="stag stag-blue">📘 Facebook + Instagram organic · feed · Stories · Reels</div>
+</div>
+<div class="agent"><div class="aname">Pinterest Agent</div><div class="adesc">Board management, pin scheduling, rich pins linked to Shopify products, SEO-optimized descriptions, trend research on Pinterest Trends. Drives product discovery and direct traffic to mozaico.com</div>
+<div class="br platform-claude"><span class="b bc">Claude + Pinterest API</span><span class="b ba">N8n + Buffer</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Pinterest API</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Pinterest via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Pinterest direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-blue">📌 Pinterest organic · boards · rich pins · SEO</div>
+</div>
+<div class="agent"><div class="aname">Reddit Agent</div><div class="adesc">Engages authentically in r/mosaics, r/interiordesign, r/DIY, r/HomeImprovement. Adds genuine value, answers questions, subtly references Mozaico where relevant. Community-first — wrong tone gets banned</div>
+<div class="br platform-claude"><span class="b bc">Claude + Reddit API</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">Reddit API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Reddit API via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Reddit via webhook</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-blue">👥 Community-first · authentic engagement only</div>
+</div>
+<div class="agent"><div class="aname">TikTok Agent</div><div class="adesc">Creates and schedules organic TikTok content — trending audio, mosaic time-lapses, before/after reveals, behind-the-scenes clips. Manages hashtags, monitors trends, analyses performance</div>
+<div class="br platform-claude"><span class="b bc">Claude + TikTok API</span><span class="b ba">N8n + Metricool</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">TikTok API</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">TikTok via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">TikTok direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-amber">🎵 TikTok organic · trends · time-lapses · reveals</div>
+</div>
+<div class="agent"><div class="aname">X Agent</div><div class="adesc">Posts design tips, project reveals, trending topic participation, and brand content on X. Monitors brand mentions and trending hashtags in interior design and mosaics</div>
+<div class="br platform-claude"><span class="b bc">Claude + X API v2</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">X API v2</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">X API via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">X/Twitter direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-blue">🐦 X organic · posts · mentions · trending</div>
+</div>
+<div class="agent"><div class="aname">LinkedIn Agent</div><div class="adesc">Organic B2B content targeting interior designers, architects, hospitality &amp; real estate developers. Thought leadership posts, project showcases, behind-the-scenes production stories, and industry insights</div>
+<div class="br platform-claude"><span class="b bc">Claude + LinkedIn API</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">LinkedIn API</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">LinkedIn via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">LinkedIn direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+<div class="stag stag-blue">🏢 LinkedIn organic · thought leadership · B2B content</div>
+</div>
+<div class="agent"><div class="aname">YouTube Agent</div><div class="adesc">One agent, two formats. Long-form: installation walkthroughs, behind-the-scenes, mosaic care guides, client reveals — SEO-optimised titles, descriptions, chapters and thumbnails. Shorts: repurposed TikTok clips, quick reveals, time-lapses, design tips under 60 seconds — optimised for the Shorts algorithm</div>
+<div class="br platform-claude"><span class="b bc">Claude + YouTube Data API</span><span class="b ba">N8n</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini</span><span class="b bgo2">YouTube Data API</span><span class="b bgo3">Cloud Scheduler</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">YouTube via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">YouTube direct ✓</span><span class="b bz3">TikTok repurpose flow</span></div>
+<div class="stag stag-blue">🎬 Long-form + Shorts · SEO · repurposed content</div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-website">
+  <div class="dept-hdr" onclick="tog(this)">
+    <div class="dept-icon" style="background:#0e1a2a">🖥️</div>
+    <span class="dept-title">Website &amp; Technology</span>
+    <span class="dept-count">3 agents</span>
+    <span class="chev open">▼</span>
+  </div>
+  <div class="agents-grid">
+<div class="agent"><div class="aname">Website Functionality Monitor</div><div class="adesc">Scheduled checks on checkout, product pages, search &amp; contact forms. Sends immediate email alert with screenshot when a page errors or breaks</div>
+<div class="br platform-claude"><span class="b ba">N8n + Playwright + Gmail</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Scheduler</span><span class="b bgo2">Cloud Run + Playwright</span><span class="b bgo3">Gmail API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio + external</span><span class="b bm2">Web scraping built-in ✓</span><span class="b bm3">⚠ Playwright needs Cloud Run</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">URL monitor via webhook</span><span class="b bz3">⚠ Playwright needs external</span></div>
+</div>
+<div class="agent"><div class="aname">UX/UI Optimization Agent</div><div class="adesc">Analyses site experience and conversion friction — reads Hotjar/Clarity heatmaps and session recordings, monitors mobile vs desktop behaviour, audits custom order flow drop-offs, product page layout, and checkout friction. Proposes A/B tests and actionable UX improvements. Feeds the Web Analyst</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + Hotjar API</span><span class="b ba">N8n + Clarity</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">GA4 API</span><span class="b bgo3">Microsoft Clarity</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Hotjar + GA4 via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">Hotjar via webhook</span><span class="b bz3">GA4 direct ✓</span></div>
+<div class="stag stag-blue">🖥️ Conversion · heatmaps · A/B tests · mobile UX</div>
+</div>
+<div class="agent"><div class="aname">Technical SEO Specialist</div><div class="adesc">Handles site infrastructure SEO — crawlability, indexing, Core Web Vitals (LCP, CLS, FID), site speed, structured data/schema markup, XML sitemaps, canonical tags, redirect chains, and Shopify-specific technical issues. Reads Screaming Frog crawls, GSC coverage reports, and PageSpeed data</div>
+<div class="br platform-claude"><span class="b bnew">✦ New</span><span class="b bc">Claude + Screaming Frog</span><span class="b ba">N8n + GSC API</span></div>
+<div class="br platform-google"><span class="b bnew">✦ New</span><span class="b bgo">Gemini</span><span class="b bgo2">Search Console API</span><span class="b bgo3">PageSpeed API</span></div>
+<div class="br platform-mind"><span class="b bnew">✦ New</span><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">GSC + PageSpeed via Zapier</span></div>
+<div class="br platform-zap"><span class="b bnew">✦ New</span><span class="b bz">Zapier Agent</span><span class="b bz2">GSC direct ✓</span><span class="b bz3">PageSpeed API</span></div>
+<div class="stag stag-blue">⚙️ Crawlability · Core Web Vitals · schema · Shopify SEO</div>
+</div>
+
+  </div>
+</div>
+
+<div class="dept-block" id="dept-customer">
+  <div class="dept-hdr" onclick="tog(this)">
     <div class="dept-icon" style="background:#0d2318">🎙️</div>
     <span class="dept-title">Customer Service</span>
-    <span class="dept-count">2 agents</span>
-    <span class="chevron open">▼</span>
+    <span class="dept-count">3 agents</span>
+    <span class="chev open">▼</span>
   </div>
   <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">JustCall Voice Agent</div>
-      <div class="agent-desc">Answers FAQs, provides order status updates, routes calls to human agents when needed</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + JustCall</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Dialogflow CX</span><span class="badge b-google2">Gemini</span><span class="badge b-google3">JustCall API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">JustCall direct integration ✓</span><span class="badge b-zap3">Claude via Zapier AI</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4 / GPT-5</span><span class="badge b-mind3">JustCall via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Reamaze Email Agent</div>
-      <div class="agent-desc">Support inbox only — order questions, complaints, invoice queries, returns & refunds. Auto-responds, applies smart tags, escalates complex issues</div>
-      <div class="badge-row platform-claude"><span class="badge b-blue">Claude + Reamaze</span><span class="badge b-red">Scope clarified</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Dialogflow CX</span><span class="badge b-google2">Gemini</span><span class="badge b-google3">Reamaze API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Reamaze direct integration ✓</span><span class="badge b-zap3">Claude via Zapier AI</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">Reamaze webhook trigger</span></div>
-    </div>
+<div class="agent"><div class="aname">JustCall Voice Agent</div><div class="adesc">Answers FAQs, provides order status updates, routes calls to human agents when needed</div>
+<div class="br platform-claude"><span class="b bc">Claude + JustCall</span></div>
+<div class="br platform-google"><span class="b bgo">Dialogflow CX</span><span class="b bgo2">Gemini</span><span class="b bgo3">JustCall API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4 / GPT-5</span><span class="b bm3">JustCall via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">JustCall direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+</div>
+<div class="agent"><div class="aname">Reamaze Email Agent</div><div class="adesc">Support inbox only — order questions, complaints, invoice queries, returns &amp; refunds. Auto-responds, applies smart tags, escalates complex issues.</div>
+<div class="br platform-claude"><span class="b bc">Claude + Reamaze</span><span class="b br2">Scope clarified</span></div>
+<div class="br platform-google"><span class="b bgo">Dialogflow CX</span><span class="b bgo2">Gemini</span><span class="b bgo3">Reamaze API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">Reamaze webhook trigger</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Reamaze direct ✓</span><span class="b bz3">Claude via Zapier AI</span></div>
+</div>
+<div class="agent"><div class="aname">Invoice Agent</div><div class="adesc">Creates Stripe invoices on customer request, sends hosted payment link directly to customer via Reamaze message</div>
+<div class="br platform-claude"><span class="b ba">N8n + Stripe</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">Stripe API</span><span class="b bgo3">Reamaze API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Stripe via Zapier</span><span class="b bm3">Reamaze webhook</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Stripe direct ✓</span><span class="b bz3">Reamaze direct ✓</span></div>
+</div>
 
   </div>
 </div>
 
-<!-- ═══ OPERATIONS & FULFILLMENT ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
+<div class="dept-block" id="dept-operations">
+  <div class="dept-hdr" onclick="tog(this)">
     <div class="dept-icon" style="background:#2a1208">🚚</div>
-    <span class="dept-title">Operations & Fulfillment</span>
-    <span class="dept-count">7 agents</span>
-    <span class="chevron open">▼</span>
+    <span class="dept-title">Operations &amp; Fulfillment</span>
+    <span class="dept-count">5 agents</span>
+    <span class="chev open">▼</span>
   </div>
   <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">Order Entry Agent</div>
-      <div class="agent-desc">Automatically extracts orders from Shopify, Etsy & Reamaze. Creates entries with correct SKUs, dimensions, and customer details. Eliminates manual errors</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Zapier</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">Pub/Sub triggers</span><span class="badge b-google3">Shopify API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Shopify direct integration ✓</span><span class="badge b-zap3">Etsy + Reamaze direct ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Shopify trigger via Zapier</span><span class="badge b-mind3">Structured data output</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Shipment Creation Agent</div>
-      <div class="agent-desc">DHL Express labels, pickup scheduling, tracking number pushed back to Shopify order automatically after label generation</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + DHL Express API</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">DHL Express API</span><span class="badge b-google3">Shopify API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">DHL via webhook/API</span><span class="badge b-zap3">Shopify direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">DHL API via Zapier</span><span class="badge b-mind3">Shopify update via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Shipment Status Monitor</div>
-      <div class="agent-desc">Polls DHL Tracking API every few hours, detects on-hold or exception statuses, auto-sends escalation email to DHL support, logs all incidents</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + DHL Tracking + Gmail</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Scheduler</span><span class="badge b-google2">DHL Tracking API</span><span class="badge b-google3">Gmail API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Scheduled Agent</span><span class="badge b-zap2">DHL Tracking via webhook</span><span class="badge b-zap3">Gmail direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Scheduled</span><span class="badge b-mind2">DHL API via Zapier</span><span class="badge b-mind3">Email send built-in ✓</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Website Functionality Monitor</div>
-      <div class="agent-desc">Scheduled checks on checkout, product pages, search & contact forms. Sends immediate email alert with screenshot when a page errors or breaks</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Playwright + Gmail</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Scheduler</span><span class="badge b-google2">Cloud Run + Playwright</span><span class="badge b-google3">Gmail API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">URL monitor via webhook</span><span class="badge b-zap3">⚠ Playwright needs external</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio + external</span><span class="badge b-mind2">Web scraping built-in ✓</span><span class="badge b-mind3">⚠ Playwright needs Cloud Run</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Invoice Agent</div>
-      <div class="agent-desc">Creates Stripe invoices on customer request, sends hosted payment link directly to customer via Reamaze message</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Stripe</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">Stripe API</span><span class="badge b-google3">Reamaze API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Stripe direct integration ✓</span><span class="badge b-zap3">Reamaze direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Stripe via Zapier</span><span class="badge b-mind3">Reamaze webhook</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Customer Image Update Agent</div>
-      <div class="agent-desc">3-stage automated sends: order confirmed → WIP photo in production → completed mosaic ready. Pulls from Google Drive, matches to order, sends personalized message via Reamaze</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Drive + Reamaze</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">Drive API</span><span class="badge b-google3">Gemini + Reamaze</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Google Drive direct ✓</span><span class="badge b-zap3">Reamaze direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Drive via Zapier</span><span class="badge b-mind3">Reamaze webhook</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name">Stock Update Agent</div>
-      <div class="agent-desc">Syncs Shopify ↔ Excel inventory in real time, flags low-stock items, auto-updates quantities after shipments are confirmed</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + Python</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">Sheets API</span><span class="badge b-google3">Shopify API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">Shopify direct integration ✓</span><span class="badge b-zap3">Google Sheets direct ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Sheets built-in ✓</span><span class="badge b-mind3">Shopify via Zapier</span></div>
-    </div>
+<div class="agent"><div class="aname">Order Entry Agent</div><div class="adesc">Automatically extracts orders from Reamaze. Creates entries with correct SKUs, dimensions, and customer details. Eliminates manual errors</div>
+<div class="br platform-claude"><span class="b ba">N8n + Zapier</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">Pub/Sub triggers</span><span class="b bgo3">Shopify API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Shopify trigger via Zapier</span><span class="b bm3">Structured data output</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Shopify direct ✓</span><span class="b bz3">Etsy + Reamaze direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">Shipment Creation Agent</div><div class="adesc">DHL Express labels, pickup scheduling, tracking number pushed back to Shopify order automatically after label generation</div>
+<div class="br platform-claude"><span class="b ba">N8n + DHL Express API</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">DHL Express API</span><span class="b bgo3">Shopify API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">DHL API via Zapier</span><span class="b bm3">Shopify update via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">DHL via webhook/API</span><span class="b bz3">Shopify direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">Shipment Status Monitor</div><div class="adesc">Polls DHL Tracking API every few hours, detects on-hold or exception statuses, auto-sends escalation email to DHL support, notifies ops team, logs all incidents</div>
+<div class="br platform-claude"><span class="b ba">N8n + DHL Tracking + Gmail</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Scheduler</span><span class="b bgo2">DHL Tracking API</span><span class="b bgo3">Gmail API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Scheduled</span><span class="b bm2">DHL API via Zapier</span><span class="b bm3">Email send built-in ✓</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Scheduled Agent</span><span class="b bz2">DHL Tracking via webhook</span><span class="b bz3">Gmail direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname">Customer Image Update Agent</div><div class="adesc">3-stage automated sends: order confirmed → WIP photo when production starts → completed mosaic when finished. Pulls images from Google Drive, matches to order number, sends personalised message with estimated timeline via Reamaze</div>
+<div class="br platform-claude"><span class="b ba">N8n + Drive + Reamaze</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">Drive API</span><span class="b bgo3">Reamaze API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Drive via Zapier</span><span class="b bm3">Reamaze webhook</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Google Drive direct ✓</span><span class="b bz3">Reamaze direct ✓</span></div>
+<div class="stag stag-blue">📸 WIP + completed · personalised customer updates</div>
+</div>
+<div class="agent"><div class="aname">Stock Update Agent</div><div class="adesc">Syncs Shopify ↔ Excel inventory in real time, flags low-stock items, auto-updates quantities after shipments are confirmed</div>
+<div class="br platform-claude"><span class="b ba">N8n + Python</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">Sheets API</span><span class="b bgo3">Shopify API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Sheets built-in ✓</span><span class="b bm3">Shopify via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">Shopify direct ✓</span><span class="b bz3">Google Sheets direct ✓</span></div>
+</div>
 
   </div>
 </div>
 
-<!-- ═══ ACCOUNTING & FINANCE ═══ -->
-<div class="dept-block">
-  <div class="dept-header" onclick="toggle(this)">
+<div class="dept-block" id="dept-accounting">
+  <div class="dept-hdr" onclick="tog(this)">
     <div class="dept-icon" style="background:#1e1530">🧾</div>
-    <span class="dept-title">Accounting & Finance</span>
+    <span class="dept-title">Accounting &amp; Finance</span>
     <span class="dept-count">2 agents</span>
-    <span class="chevron open">▼</span>
+    <span class="chev open">▼</span>
   </div>
   <div class="agents-grid">
-
-    <div class="agent-card">
-      <div class="agent-name">Monthly P&L Report Agent</div>
-      <div class="agent-desc">Pulls Shopify + Stripe + Amazon + Etsy revenue and all costs from QuickBooks. Generates monthly P&L with gross margin, net profit, and channel ROAS</div>
-      <div class="badge-row platform-claude"><span class="badge b-purple">Claude + QuickBooks + Stripe</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Gemini 1.5 Pro</span><span class="badge b-google2">BigQuery</span><span class="badge b-google3">Looker Studio · QuickBooks API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Scheduled Agent</span><span class="badge b-zap2">QuickBooks direct integration ✓</span><span class="badge b-zap3">Stripe + Shopify direct ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">Claude 4</span><span class="badge b-mind3">QuickBooks + Stripe via Zapier</span></div>
-    </div>
-
-    <div class="agent-card">
-      <div class="agent-name muted">DHL Invoice Checker</div>
-      <div class="agent-desc">Reconciles DHL invoices against shipment records via DHL Invoice API, flags overcharges, feeds discrepancies into QuickBooks before monthly P&L runs</div>
-      <div class="badge-row platform-claude"><span class="badge b-amber">N8n + DHL Invoice API + QuickBooks</span></div>
-      <div class="badge-row platform-google"><span class="badge b-google">Cloud Functions</span><span class="badge b-google2">DHL Invoice API</span><span class="badge b-google3">QuickBooks API</span></div>
-      <div class="badge-row platform-zap"><span class="badge b-zap">Zapier Agent</span><span class="badge b-zap2">DHL API via webhook</span><span class="badge b-zap3">QuickBooks direct integration ✓</span></div>
-      <div class="badge-row platform-mind"><span class="badge b-mind">MindStudio Agent</span><span class="badge b-mind2">DHL API via Zapier</span><span class="badge b-mind3">QuickBooks via Zapier</span></div>
-      <div class="tbd-tag">📍 Placement TBD</div>
-    </div>
+<div class="agent"><div class="aname">Monthly P&amp;L Report Agent</div><div class="adesc">Pulls transactions from Stripe and PayPal, imports other invoices, and reconciles all revenue into QuickBooks automatically. Once synced, generates monthly P&amp;L report with gross margin, net profit, and channel breakdown — no manual data entry required</div>
+<div class="br platform-claude"><span class="b bp">Claude + QuickBooks</span><span class="b bc">Stripe + PayPal APIs</span></div>
+<div class="br platform-google"><span class="b bgo">Gemini 1.5 Pro</span><span class="b bgo2">BigQuery</span><span class="b bgo3">Looker Studio · QuickBooks API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">Claude 4</span><span class="b bm3">QuickBooks + Stripe via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Scheduled Agent</span><span class="b bz2">QuickBooks direct ✓</span><span class="b bz3">Stripe + PayPal direct ✓</span></div>
+</div>
+<div class="agent"><div class="aname muted">DHL Invoice Checker</div><div class="adesc">Reconciles DHL invoices against shipment records via DHL Invoice API, flags overcharges, feeds discrepancies into QuickBooks before monthly P&amp;L runs</div>
+<div class="br platform-claude"><span class="b ba">N8n + DHL Invoice API + QuickBooks</span></div>
+<div class="br platform-google"><span class="b bgo">Cloud Functions</span><span class="b bgo2">DHL Invoice API</span><span class="b bgo3">QuickBooks API</span></div>
+<div class="br platform-mind"><span class="b bm">MindStudio Agent</span><span class="b bm2">DHL API via Zapier</span><span class="b bm3">QuickBooks via Zapier</span></div>
+<div class="br platform-zap"><span class="b bz">Zapier Agent</span><span class="b bz2">DHL API via webhook</span><span class="b bz3">QuickBooks direct ✓</span></div>
+<div class="tbd">📍 Placement TBD</div>
+</div>
 
   </div>
+</div>
+
+
+<div style="max-width:1200px;margin:0 auto 32px;">
+  <div style="border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+    <div style="padding:14px 20px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;border-radius:10px;background:#1a2e2a;display:flex;align-items:center;justify-content:center;font-size:18px;">🗺️</div>
+      <div><div style="font-size:16px;font-weight:600;color:var(--text);">Agent relationship map</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">45 agents · 11 departments · click any department to explore</div></div>
+    </div>
+    <div style="padding:24px 20px;background:var(--surface);">
+      <svg width="100%" viewBox="0 0 760 884" role="img" style="font-family:Inter,sans-serif;">
+        <title>Mozaico AI agent relationship map</title>
+        <defs>
+          <marker id="marr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- LEGEND -->
+        <rect x="30" y="8" width="8" height="8" rx="2" fill="#0d2318" stroke="#34a853" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="43" y="16">Creative</text>
+        <rect x="110" y="8" width="8" height="8" rx="2" fill="#0e1a2e" stroke="#2979ff" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="123" y="16">Paid Ads</text>
+        <rect x="192" y="8" width="8" height="8" rx="2" fill="#1a0e2e" stroke="#ce93d8" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="205" y="16">Growth</text>
+        <rect x="262" y="8" width="8" height="8" rx="2" fill="#0e1e32" stroke="#4285f4" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="275" y="16">Email</text>
+        <rect x="320" y="8" width="8" height="8" rx="2" fill="#2a2008" stroke="#fbbc04" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="333" y="16">Analytics</text>
+        <rect x="406" y="8" width="8" height="8" rx="2" fill="#0d2220" stroke="#38bfb0" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="419" y="16">Social</text>
+        <rect x="468" y="8" width="8" height="8" rx="2" fill="#0e1a2a" stroke="#64b5f6" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="481" y="16">Web &amp; Tech</text>
+        <rect x="568" y="8" width="8" height="8" rx="2" fill="#2a1208" stroke="#f0997b" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="581" y="16">Operations</text>
+        <rect x="660" y="8" width="8" height="8" rx="2" fill="#1e1530" stroke="#9b7fe8" stroke-width="1"/>
+        <text font-size="10" fill="var(--text2)" x="673" y="16">Finance</text>
+
+        <!-- ══ ROW 1: CREATIVE ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-creative')">
+          <rect x="155" y="30" width="450" height="74" rx="10" fill="#0d2318" stroke="#34a853" stroke-width="0.5"/>
+          <text font-size="13" font-weight="500" fill="#9FE1CB" x="380" y="52" text-anchor="middle">🎨 Creative &amp; Content</text>
+          <text font-size="10" fill="#5DCAA5" x="380" y="70" text-anchor="middle">Art Director · Blog Writer · Mosaic Sketch · Content Calendar</text>
+          <text font-size="10" fill="#5DCAA5" x="380" y="85" text-anchor="middle">Product Content · Website Content · Installed Photos</text>
+        </g>
+
+        <!-- Arrows from Creative — exit at bottom corners, enter row2 tops clearly -->
+        <!-- Creative → Paid Ads: exit bottom-left of creative, enter top of paid ads -->
+        <line x1="230" y1="104" x2="130" y2="148" stroke="#34a853" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Creative → Email: straight down center -->
+        <line x1="380" y1="104" x2="380" y2="148" stroke="#34a853" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Creative → Growth: exit bottom-right of creative, enter top of growth -->
+        <line x1="530" y1="104" x2="630" y2="148" stroke="#34a853" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Arrow labels placed beside arrows, not on them -->
+        
+        
+
+        <!-- ══ ROW 2: PAID ADS | EMAIL | GROWTH ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-paid-ads')">
+          <rect x="30" y="148" width="195" height="84" rx="10" fill="#0e1a2e" stroke="#2979ff" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#82b1ff" x="128" y="172" text-anchor="middle">💰 Paid Ads</text>
+          <text font-size="10" fill="#448aff" x="128" y="189" text-anchor="middle">Google · Meta · TikTok</text>
+          <text font-size="10" fill="#448aff" x="128" y="204" text-anchor="middle">Pinterest · X · LinkedIn</text>
+        </g>
+        <g style="cursor:pointer" onclick="jumpTo('dept-email')">
+          <rect x="248" y="148" width="264" height="84" rx="10" fill="#0e1e32" stroke="#4285f4" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#85B7EB" x="380" y="176" text-anchor="middle">📣 Email Marketing</text>
+          <text font-size="10" fill="#378ADD" x="380" y="198" text-anchor="middle">Email &amp; SMS Specialist (Omnisend)</text>
+        </g>
+        <g style="cursor:pointer" onclick="jumpTo('dept-influencer')">
+          <rect x="535" y="148" width="195" height="84" rx="10" fill="#1a0e2e" stroke="#ce93d8" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#e1bee7" x="633" y="168" text-anchor="middle">🤝 Influencer,</text>
+          <text font-size="12" font-weight="500" fill="#e1bee7" x="633" y="184" text-anchor="middle">Affiliate &amp; PR</text>
+          <text font-size="10" fill="#ce93d8" x="633" y="204" text-anchor="middle">Outreach · Affiliate · PR · B2B</text>
+        </g>
+
+        <!-- Row 2 → Row 3 arrows: all exit bottom of boxes, enter top of row3 boxes -->
+        <!-- Paid Ads → Social Media (straight down left side) -->
+        <line x1="128" y1="232" x2="128" y2="268" stroke="#2979ff" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Email → Community (exit bottom-left of email, enter top of community) -->
+        <line x1="310" y1="232" x2="310" y2="268" stroke="#4285f4" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Email → Customer Service (exit bottom-right of email, enter top of CS) -->
+        <line x1="460" y1="232" x2="530" y2="268" stroke="#4285f4" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Growth → Customer Service (straight down, merges with email→CS path but offset) -->
+        <line x1="633" y1="232" x2="620" y2="268" stroke="#ce93d8" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Label for email flows — placed to the RIGHT of the arrow, clear of boxes -->
+        
+
+        <!-- ══ ROW 3: SOCIAL | COMMUNITY | CUSTOMER SERVICE ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-social')">
+          <rect x="30" y="268" width="195" height="106" rx="10" fill="#0d2220" stroke="#38bfb0" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#5DCAA5" x="128" y="290" text-anchor="middle">📱 Social Media</text>
+          <text font-size="10" fill="#1D9E75" x="128" y="307" text-anchor="middle">Meta · Pinterest · TikTok</text>
+          <text font-size="10" fill="#1D9E75" x="128" y="322" text-anchor="middle">X · LinkedIn · YouTube</text>
+          <text font-size="10" fill="#1D9E75" x="128" y="337" text-anchor="middle">Reddit</text>
+        </g>
+        <g style="cursor:pointer" onclick="jumpTo('dept-community')">
+          <rect x="248" y="268" width="180" height="106" rx="10" fill="#0e1e2e" stroke="#64b5f6" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#90caf9" x="338" y="295" text-anchor="middle">💬 Community</text>
+          <text font-size="10" fill="#42a5f5" x="338" y="315" text-anchor="middle">Community Manager</text>
+          <text font-size="10" fill="#42a5f5" x="338" y="332" text-anchor="middle">Review Engagement</text>
+        </g>
+        <g style="cursor:pointer" onclick="jumpTo('dept-customer')">
+          <rect x="450" y="268" width="280" height="106" rx="10" fill="#0d2220" stroke="#38bfb0" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#5DCAA5" x="590" y="290" text-anchor="middle">🎙️ Customer Service</text>
+          <text font-size="10" fill="#1D9E75" x="590" y="308" text-anchor="middle">JustCall Voice Agent</text>
+          <text font-size="10" fill="#1D9E75" x="590" y="324" text-anchor="middle">Reamaze Email Agent</text>
+          <text font-size="10" fill="#1D9E75" x="590" y="340" text-anchor="middle">Invoice Agent</text>
+        </g>
+
+        <!-- Row3 → Row4 (Website): exit bottom, vertical lines into top of website box -->
+        <!-- Social → Website (left) -->
+        <line x1="128" y1="374" x2="128" y2="412" stroke="#38bfb0" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- CS → Website (right) -->
+        <line x1="590" y1="374" x2="590" y2="412" stroke="#38bfb0" stroke-width="1" marker-end="url(#marr)"/>
+        <!-- Labels: placed OUTSIDE boxes, above row4 -->
+        
+        
+
+        <!-- ══ ROW 4: WEBSITE & TECHNOLOGY ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-website')">
+          <rect x="30" y="412" width="700" height="64" rx="10" fill="#0e1a2a" stroke="#64b5f6" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#90caf9" x="380" y="436" text-anchor="middle">🖥️ Website &amp; Technology</text>
+          <text font-size="10" fill="#42a5f5" x="380" y="455" text-anchor="middle">Website Functionality Monitor · UX/UI Optimization Agent · Technical SEO Specialist</text>
+        </g>
+
+        <!-- Website → Operations: two vertical lines, labels placed to sides -->
+        <line x1="200" y1="476" x2="200" y2="506" stroke="#64b5f6" stroke-width="1" marker-end="url(#marr)"/>
+        <line x1="560" y1="476" x2="560" y2="506" stroke="#64b5f6" stroke-width="1" marker-end="url(#marr)"/>
+        
+        
+
+        <!-- ══ ROW 5: OPERATIONS ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-operations')">
+          <rect x="30" y="506" width="700" height="80" rx="10" fill="#2a1208" stroke="#f0997b" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#F5C4B3" x="380" y="530" text-anchor="middle">🚚 Operations &amp; Fulfillment</text>
+          <text font-size="10" fill="#D85A30" x="380" y="548" text-anchor="middle">Order Entry · Shipment Creation · Shipment Status Monitor</text>
+          <text font-size="10" fill="#D85A30" x="380" y="564" text-anchor="middle">Customer Image Update · Stock Update</text>
+        </g>
+
+        <!-- Operations → Accounting: straight down center -->
+        <line x1="380" y1="586" x2="380" y2="616" stroke="#f0997b" stroke-width="1" marker-end="url(#marr)"/>
+        
+
+        <!-- ══ ROW 6: ACCOUNTING ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-accounting')">
+          <rect x="190" y="616" width="380" height="56" rx="10" fill="#1e1530" stroke="#9b7fe8" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#AFA9EC" x="380" y="639" text-anchor="middle">🧾 Accounting &amp; Finance</text>
+          <text font-size="10" fill="#7F77DD" x="380" y="658" text-anchor="middle">Monthly P&amp;L Report · DHL Invoice Checker</text>
+        </g>
+
+        <!-- Accounting → Analytics: straight down -->
+        <line x1="380" y1="672" x2="380" y2="700" stroke="#9b7fe8" stroke-width="1" marker-end="url(#marr)"/>
+        
+
+        <!-- ══ ROW 7: SEO & ANALYTICS ══ -->
+        <g style="cursor:pointer" onclick="jumpTo('dept-seo')">
+          <rect x="30" y="700" width="700" height="80" rx="10" fill="#2a2008" stroke="#fbbc04" stroke-width="0.5"/>
+          <text font-size="12" font-weight="500" fill="#FAC775" x="380" y="724" text-anchor="middle">📊 SEO &amp; Analytics</text>
+          <text font-size="10" fill="#BA7517" x="380" y="742" text-anchor="middle">KPI Tracker · Web Analyst · Monthly Marketing Report</text>
+          <text font-size="10" fill="#BA7517" x="380" y="758" text-anchor="middle">SEO Specialist · Market Research Analyst</text>
+        </g>
+
+        <!-- FEEDBACK LOOPS: routed at x=12 (left) and x=748 (right), clear of all boxes -->
+        <path d="M30 740 L12 740 L12 67 L155 67" fill="none" stroke="var(--border2)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#marr)"/>
+        <path d="M730 740 L748 740 L748 190 L730 190" fill="none" stroke="var(--border2)" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#marr)"/>
+        <!-- Rotated labels in outer margin only -->
+        <text font-size="9" fill="var(--text3)" x="6" y="403" text-anchor="middle" transform="rotate(-90 6 403)">insights → creative &amp; all depts</text>
+        <text font-size="9" fill="var(--text3)" x="754" y="465" text-anchor="middle" transform="rotate(90 754 465)">insights → paid ads &amp; growth</text>
+
+        <!-- CUSTOMER LIFECYCLE BAR -->
+        <rect x="30" y="826" width="700" height="50" rx="8" fill="none" stroke="var(--border2)" stroke-width="0.5" stroke-dasharray="5 3"/>
+        <text font-size="12" font-weight="500" fill="var(--text2)" x="380" y="845" text-anchor="middle">Customer lifecycle</text>
+        <text font-size="10" fill="var(--text3)" x="380" y="864" text-anchor="middle">Discovery → Consideration → Cart → Purchase → Production → Delivery → Review → Reactivation</text>
+        <line x1="380" y1="780" x2="380" y2="826" stroke="var(--border2)" stroke-width="0.5" stroke-dasharray="3 2" marker-end="url(#marr)"/>
+      </svg>
+    </div>
+  </div>
+</div>
+<div class="cost-wrap">
+  <div class="cost-hdr"><div class="cost-hdr-title">💰 Tool Cost Breakdown — Monthly Estimate</div><div class="cost-hdr-sub">Based on current May 2026 pricing · Select a platform above to see its cost profile</div></div>
+  <div class="cost-block" id="cost-claude"><div class="cost-grid">
+    <div class="cost-cell"><div class="cost-label">Claude API — Pay as you go</div><div class="cost-amount" style="color:var(--ab)">$0 <span>flat fee · per token only</span></div><div class="cost-desc">No subscription, no minimum. Haiku 4.5: $1/$5 · Sonnet 4.6: $3/$15 · Opus 4.6: $5/$25 per MTok. ~$0.03–0.10 per agent run.</div><span class="b bc">Sonnet 4.6 · $3 input / $15 output per MTok</span></div>
+    <div class="cost-cell"><div class="cost-label">N8n Cloud</div><div class="cost-amount">$60 <span>/mo</span></div><div class="cost-desc">Pro plan · 10,000 executions/month. Or self-host on a VPS (~$15/mo) for unlimited executions.</div><span class="b ba">Self-hosted option: FREE (VPS ~$15/mo)</span></div>
+    <div class="cost-cell"><div class="cost-label">Total estimate (45 agents)</div><div class="cost-amount" style="color:var(--ab)">$90–140 <span>/mo</span></div><div class="cost-desc">Claude API ($30–80) + N8n Cloud ($60). Self-hosting N8n drops total to $45–95/mo.</div><span class="b bg">Most cost-efficient at scale</span></div>
+  </div><div class="cost-note"><strong>Pay-as-you-go:</strong> Use Haiku 4.5 for simple agents and Sonnet 4.6 for complex tasks.</div></div>
+  <div class="cost-block vis" id="cost-google"><div class="cost-grid">
+    <div class="cost-cell"><div class="cost-label">Gemini on Vertex AI — Pay as you go</div><div class="cost-amount" style="color:var(--go)">$0 <span>flat fee · per token + compute</span></div><div class="cost-desc">Flash 2.5: $0.10/$0.40 · Pro 2.5: $1.25/$10 per MTok · Agent Engine: $0.0864/vCPU-hr (active only)</div><span class="b bgo">$300 free credits · 90 days · new accounts</span></div>
+    <div class="cost-cell"><div class="cost-label">Additional per-use charges</div><div class="cost-amount">4 SKUs <span>per agent call</span></div><div class="cost-desc">Vertex Search: $1.50–$6 per 1K queries · Sessions/Memory: $0.25 per 1K events · Looker Studio: FREE</div><span class="b ba">⚠ Set GCP billing alerts</span></div>
+    <div class="cost-cell"><div class="cost-label">Total estimate (45 agents)</div><div class="cost-amount" style="color:var(--go)">$40–120 <span>/mo</span></div><div class="cost-desc">Flash 2.5 is very cheap for simple agents. Harder to predict — billed across 4 SKUs.</div><span class="b br2">⚠ Can spike — set budget cap in GCP</span></div>
+  </div><div class="cost-note"><strong>Pay-as-you-go:</strong> No flat subscription. New GCP accounts get $300 free credits for 90 days.</div></div>
+  <div class="cost-block" id="cost-mind"><div class="cost-grid">
+    <div class="cost-cell"><div class="cost-label">MindStudio Individual Plan</div><div class="cost-amount" style="color:var(--mi)">$20 <span>/mo</span></div><div class="cost-desc">Unlimited agents, unlimited runs. $16/mo billed annually. All 200+ AI models. No markup on AI model costs.</div><span class="b bm">$16/mo annual · Free plan (1 agent)</span></div>
+    <div class="cost-cell"><div class="cost-label">AI Model Usage (on top)</div><div class="cost-amount">~$30–100 <span>/mo</span></div><div class="cost-desc">AI model costs billed at provider rates with zero markup. Claude 4, GPT-5, Gemini billed exactly as provider charges.</div><span class="b bm2">No markup · provider cost passthrough</span></div>
+    <div class="cost-cell"><div class="cost-label">Total estimate (45 agents)</div><div class="cost-amount" style="color:var(--mi)">$50–120 <span>/mo</span></div><div class="cost-desc">$20 platform + $30–100 model usage. Lowest entry cost.</div><span class="b bg">Lowest barrier to entry · no-code</span></div>
+  </div><div class="cost-note"><strong>What you need:</strong> MindStudio at $20/mo + model usage at provider rates. Set a usage budget alert.</div></div>
+  <div class="cost-block" id="cost-zap"><div class="cost-grid">
+    <div class="cost-cell"><div class="cost-label">Zapier Professional Plan</div><div class="cost-amount" style="color:var(--za)">$49 <span>/mo</span></div><div class="cost-desc">2,000 tasks/mo · all premium apps · Shopify, Stripe, QuickBooks, Google Ads · webhooks · AI Copilot. Billed annually.</div><span class="b bz">Team plan $69/mo for shared workspace</span></div>
+    <div class="cost-cell"><div class="cost-label">Claude API (for AI actions)</div><div class="cost-amount">~$20–60 <span>/mo</span></div><div class="cost-desc">Zapier calls Claude API as an action step. Sonnet 4.6 at $3/$15 per MTok input/output.</div><span class="b bc">Claude via Zapier AI action node</span></div>
+    <div class="cost-cell"><div class="cost-label">Total estimate (45 agents)</div><div class="cost-amount" style="color:var(--za)">$69–110 <span>/mo</span></div><div class="cost-desc">Zapier Professional ($49) + Claude API ($20–60). You already have Zapier — main new cost is Claude API only.</div><span class="b bg">You already have Zapier — lowest new spend</span></div>
+  </div><div class="cost-note"><strong>What you need:</strong> Your existing Zapier account + Anthropic API key. Monitor task usage carefully.</div></div>
+  <div class="comp-grid">
+    <div class="comp-card"><div class="comp-title">☁️ Google Platform</div><div class="comp-amt" style="color:var(--go)">$40–120</div><div class="comp-note">/month · best for Google stack</div></div>
+    <div class="comp-card"><div class="comp-title">🤖 Claude + N8n</div><div class="comp-amt" style="color:var(--ab)">$90–140</div><div class="comp-note">/month · best quality &amp; control</div></div>
+    <div class="comp-card"><div class="comp-title">🧠 MindStudio</div><div class="comp-amt" style="color:var(--mi)">$50–120</div><div class="comp-note">/month · best for non-technical</div></div>
+    <div class="comp-card"><div class="comp-title">⚡ Zapier Agents</div><div class="comp-amt" style="color:var(--za)">$69–110</div><div class="comp-note">/month · you already have it</div></div>
+  </div>
+  <div class="disclaimer">All estimates are for platform/AI costs only and exclude third-party tool subscriptions. Costs shown at moderate usage for a 45-agent setup.</div>
 </div>
 
 <script>
-let currentPlatform = 'claude';
-
-function setPlatform(p) {
-  currentPlatform = p;
-  document.querySelectorAll('.toggle-btn').forEach(btn => {
-    btn.classList.remove('active-claude','active-google','active-mind');
-  });
-  const btns = document.querySelectorAll('.toggle-btn');
-  if      (p === 'claude') btns[0].classList.add('active-claude');
-  else if (p === 'google') btns[1].classList.add('active-google');
-  else if (p === 'mind')   btns[2].classList.add('active-mind');
-  else                     btns[3].classList.add('active-zap');
-
-  ['note-claude','note-google','note-mind','note-zap','cost-claude','cost-google','cost-mind','cost-zap'].forEach(id => {
-    const el = document.getElementById(id);
-    el.classList.remove('visible');
-    el.style.display = 'none';
-  });
-  const note = document.getElementById('note-' + p);
-  note.style.display = 'block';
-  note.classList.add('visible');
-  const cost = document.getElementById('cost-' + p);
-  if (cost) cost.style.display = 'block';
-
-  document.querySelectorAll('.platform-claude,.platform-google,.platform-mind,.platform-zap').forEach(el => {
-    el.classList.remove('visible');
-  });
-  document.querySelectorAll('.platform-' + p).forEach(el => {
-    el.classList.add('visible');
-  });
+function jumpTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const grid=el.querySelector('.agents-grid');
+  const chev=el.querySelector('.chev');
+  if(grid&&grid.style.display==='none'){grid.style.display='grid';if(chev)chev.classList.add('open');}
+  el.scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-function toggle(header) {
-  const grid = header.nextElementSibling;
-  const chev = header.querySelector('.chevron');
-  const isHidden = grid.style.display === 'none';
-  grid.style.display = isHidden ? 'grid' : 'none';
-  chev.classList.toggle('open', isHidden);
+function setPlatform(p){
+  document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('ac','ag','am','az'));
+  const btns=document.querySelectorAll('.toggle-btn');
+  if(p==='google')btns[0].classList.add('ag');
+  else if(p==='claude')btns[1].classList.add('ac');
+  else if(p==='mind')btns[2].classList.add('am');
+  else btns[3].classList.add('az');
+  ['note-claude','note-google','note-mind','note-zap','cost-claude','cost-google','cost-mind','cost-zap'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('vis');el.style.display='none';}
+  });
+  const n=document.getElementById('note-'+p);if(n){n.style.display='block';n.classList.add('vis');}
+  const c=document.getElementById('cost-'+p);if(c){c.style.display='block';c.classList.add('vis');}
+  document.querySelectorAll('.platform-claude,.platform-google,.platform-mind,.platform-zap').forEach(el=>el.classList.remove('vis'));
+  document.querySelectorAll('.platform-'+p).forEach(el=>el.classList.add('vis'));
 }
-
-// init
-setPlatform('claude');
+function tog(h){
+  const g=h.nextElementSibling;const c=h.querySelector('.chev');
+  const hidden=g.style.display==='none';
+  g.style.display=hidden?'grid':'none';c.classList.toggle('open',hidden);
+}
+setPlatform('google');
 </script>
-
-<!-- ═══ TOOL COST BREAKDOWN ═══ -->
-<div style="max-width:1200px;margin:0 auto 48px;">
-  <div style="border:1px solid var(--border);border-radius:16px;overflow:hidden;">
-
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:12px;">
-      <div style="width:36px;height:36px;border-radius:10px;background:#1a1a30;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💰</div>
-      <div>
-        <div style="font-size:16px;font-weight:600;color:var(--text);">Tool Cost Breakdown — Monthly Estimate</div>
-        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Based on current 2026 pricing · Select a platform above to see its cost profile</div>
-      </div>
-    </div>
-
-    <!-- COST CONTENT PER PLATFORM -->
-    <div id="cost-claude" style="display:block;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Claude API — Pay as you go</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">$0<span style="font-size:13px;font-weight:400;color:var(--text2);"> flat fee · per token only</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">No subscription, no minimum. You pay only for what runs. One invoice line — tokens in, tokens out. Simple and predictable.</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-blue-bg);color:var(--accent-blue);display:inline-block;">Haiku 4.5 · $1 input / $5 output per MTok</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-blue-bg);color:var(--accent-blue);display:inline-block;">Sonnet 4.6 · $3 input / $15 output per MTok</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-blue-bg);color:var(--accent-blue);display:inline-block;">Opus 4.6 · $5 input / $25 output per MTok</div>
-          </div>
-        </div>
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Per-run cost estimate</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">$0.03–0.10<span style="font-size:13px;font-weight:400;color:var(--text2);"> per agent run</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">A typical run (blog post, review reply, email draft, SEO analysis) uses 2,000–5,000 tokens on Sonnet 4.6. Use Haiku for simple tasks to cut costs 3–5×.</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-amber-bg);color:var(--accent-amber);display:inline-block;">Blog post run · ~$0.08 on Sonnet</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-amber-bg);color:var(--accent-amber);display:inline-block;">Review reply · ~$0.02 on Haiku</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-amber-bg);color:var(--accent-amber);display:inline-block;">Monthly P&L report · ~$0.15 on Sonnet</div>
-          </div>
-        </div>
-
-        <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Monthly estimate (29 agents)</div>
-          <div style="font-size:22px;font-weight:600;color:var(--accent-blue);margin-bottom:4px;">$30–80<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo API · + N8n $60/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Claude API at moderate usage across all 29 agents. Add N8n Cloud Pro ($60/mo) for operations automations, or self-host N8n on a VPS (~$15/mo) for unlimited runs.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-green-bg);color:var(--accent-green);display:inline-block;">Total: ~$90–140/mo · self-host saves ~$45</div>
-        </div>
-
-      </div>
-      <div style="padding:14px 20px;font-size:12px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);">
-        <strong style="color:var(--text);">Pay-as-you-go:</strong> No subscription, no minimum spend, no upfront commitment. You are billed monthly for tokens consumed. Use Haiku 4.5 for high-frequency simple agents (reviews, DM replies, data entry) and Sonnet 4.6 for complex tasks (reports, blog posts, SEO). Route intelligently and costs stay well under $80/mo.
-      </div>
-    </div>
-
-    <div id="cost-google" style="display:none;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Gemini on Vertex AI — Pay as you go</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">$0<span style="font-size:13px;font-weight:400;color:var(--text2);"> flat fee · per token + compute</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">No subscription, no minimum. Billed across 4 SKUs per agent call: tokens, compute, search queries, and session storage. More complex to forecast than Claude.</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google-bg);color:var(--accent-google);display:inline-block;">Flash 2.5 · $0.10 input / $0.40 output per MTok</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google-bg);color:var(--accent-google);display:inline-block;">Pro 2.5 · $1.25 input / $10 output per MTok</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google-bg);color:var(--accent-google);display:inline-block;">Agent Engine · $0.0864/vCPU-hr (active only)</div>
-          </div>
-        </div>
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Additional per-use charges</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">4 SKUs<span style="font-size:13px;font-weight:400;color:var(--text2);"> per agent interaction</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Every agent call triggers charges across multiple billing dimensions simultaneously — unlike Claude's single token line.</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google2-bg);color:var(--accent-google2);display:inline-block;">Vertex Search · $1.50–$6 per 1K queries</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google2-bg);color:var(--accent-google2);display:inline-block;">Sessions/Memory · $0.25 per 1K events</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google2-bg);color:var(--accent-google2);display:inline-block;">Looker Studio · FREE · BigQuery included</div>
-          </div>
-        </div>
-
-        <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Monthly estimate (29 agents)</div>
-          <div style="font-size:22px;font-weight:600;color:var(--accent-google);margin-bottom:4px;">$40–120<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Flash 2.5 is very cheap ($0.10/MTok) — use it for simple agents. Reserve Pro 2.5 for complex reasoning. New GCP accounts get $300 free credits for 90 days to start at zero cost.</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-google3-bg);color:var(--accent-google3);display:inline-block;">$300 free credits · 90 days · new accounts</div>
-            <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-red-bg);color:var(--accent-red);display:inline-block;">⚠ Set GCP billing alerts — costs can spike</div>
-          </div>
-        </div>
-
-      </div>
-      <div style="padding:14px 20px;font-size:12px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);">
-        <strong style="color:var(--text);">Pay-as-you-go:</strong> No subscription, no minimum, no upfront commitment. Billed monthly across multiple GCP SKUs. Use Flash 2.5 for high-frequency agents (reviews, community replies, stock updates) and Pro 2.5 only for complex reasoning tasks. Always set a monthly budget cap in the GCP console before going live.
-      </div>
-    </div>
-
-    <div id="cost-mind" style="display:none;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">MindStudio Individual Plan</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">$20<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Unlimited agents, unlimited runs. $16/mo billed annually. Includes all 200+ AI models, live workshops, Slack community, and bootcamp access. No markup on AI model costs.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-mind-bg);color:var(--accent-mind);display:inline-block;">$16/mo annual · Free plan available (1 agent)</div>
-        </div>
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">AI Model Usage (on top)</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">~$30–100<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">MindStudio passes through AI model costs at provider rates with zero markup. Claude 4, GPT-5, Gemini usage billed exactly as you'd pay Anthropic/OpenAI/Google directly.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-mind2-bg);color:var(--accent-mind2);display:inline-block;">No markup · provider cost passthrough</div>
-        </div>
-
-        <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Total estimate</div>
-          <div style="font-size:22px;font-weight:600;color:var(--accent-mind);margin-bottom:4px;">$50–120<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">$20 platform + $30–100 model usage. One of the lowest entry costs across all 4 platforms. Operations agents will still need Zapier alongside for API triggers.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-green-bg);color:var(--accent-green);display:inline-block;">Lowest barrier to entry · no-code</div>
-        </div>
-
-      </div>
-      <div style="padding:14px 20px;font-size:12px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);">
-        <strong style="color:var(--text);">What you need:</strong> MindStudio Individual at $20/mo (or $16/mo annual) + model usage costs billed at provider rates. Set a usage budget alert inside MindStudio — costs don't cap by default. Best paired with your existing Zapier account for operations agents.
-      </div>
-    </div>
-
-    <div id="cost-zap" style="display:none;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);">
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Zapier Professional Plan</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">$49<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">2,000 tasks/mo · unlimited Zaps · all premium apps including Shopify, Stripe, QuickBooks, Google Ads · webhooks · 1-min polling · AI Copilot included. Billed annually.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-zap-bg);color:var(--accent-zap);display:inline-block;">Team plan $69/mo for shared workspace</div>
-        </div>
-
-        <div style="padding:18px 20px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Claude API (for AI actions in Zaps)</div>
-          <div style="font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;">~$20–60<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Zapier calls Claude API as an action step for intelligent text tasks (email replies, content drafts, report narratives). Sonnet 4.6 at $3/$15 per MTok input/output.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-blue-bg);color:var(--accent-blue);display:inline-block;">Claude via Zapier AI action node</div>
-        </div>
-
-        <div style="padding:18px 20px;border-bottom:1px solid var(--border);">
-          <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:10px;">Total estimate</div>
-          <div style="font-size:22px;font-weight:600;color:var(--accent-zap);margin-bottom:4px;">$69–110<span style="font-size:13px;font-weight:400;color:var(--text2);">/mo</span></div>
-          <div style="font-size:11px;color:var(--text2);line-height:1.7;margin-bottom:10px;">Zapier Professional ($49) + Claude API usage ($20–60). Since you already have Zapier, incremental cost may be just the Claude API. Watch task usage — 2,000 tasks runs out fast with polling agents.</div>
-          <div style="font-size:10px;padding:3px 8px;border-radius:6px;background:var(--accent-green-bg);color:var(--accent-green);display:inline-block;">You already have Zapier — lowest new spend</div>
-        </div>
-
-      </div>
-      <div style="padding:14px 20px;font-size:12px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);">
-        <strong style="color:var(--text);">What you need:</strong> Your existing Zapier account (upgrade to Professional if not already) + Anthropic API key for Claude AI action nodes. Since you already have Zapier, the main new cost is just the Claude API. Monitor task usage carefully — DHL polling agents alone can consume 800+ tasks/month.
-      </div>
-    </div>
-
-    <!-- COMPARISON ROW -->
-    <div style="padding:16px 20px;border-top:1px solid var(--border);background:var(--surface2);">
-      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">All platforms compared</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">🤖 Claude + Zapier</div>
-          <div style="font-size:20px;font-weight:600;color:var(--accent-blue);">$110–210</div>
-          <div style="font-size:10px;color:var(--text2);margin-top:3px;">/month · best quality & control</div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">☁️ Google Platform</div>
-          <div style="font-size:20px;font-weight:600;color:var(--accent-google);">$40–120</div>
-          <div style="font-size:10px;color:var(--text2);margin-top:3px;">/month · best for Google stack</div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">🧠 MindStudio</div>
-          <div style="font-size:20px;font-weight:600;color:var(--accent-mind);">$50–120</div>
-          <div style="font-size:10px;color:var(--text2);margin-top:3px;">/month · best for non-technical</div>
-        </div>
-        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
-          <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;">⚡ Zapier Agents</div>
-          <div style="font-size:20px;font-weight:600;color:var(--accent-zap);">$69–110</div>
-          <div style="font-size:10px;color:var(--text2);margin-top:3px;">/month · you already have it</div>
-        </div>
-      </div>
-      <div style="margin-top:10px;font-size:11px;color:var(--text3);line-height:1.6;">
-        All estimates are for platform/AI costs only and exclude third-party tool subscriptions (SEMrush, Metricool, Omnisend, Stamped, Modash, JustCall, Sprout Social, etc.) which you likely already pay for. Costs shown are monthly at moderate usage for a 29-agent setup.
-      </div>
-    </div>
-
-  </div>
-</div>
-
 </body>
 </html>
